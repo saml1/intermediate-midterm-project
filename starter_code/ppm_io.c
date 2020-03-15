@@ -1,13 +1,14 @@
-
-// __Add your name and JHED above__
+//Brayden Archer and Sam Lipschitz
+//barcher9 and slipsch3
 // ppm_io.c
 // 601.220, Spring 2019
 // Starter code for midterm project - feel free to edit/add to this file
 
 #include <assert.h>
 #include "ppm_io.h"
-
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 /* Read a PPM-formatted image from a file (assumes fp != NULL).
  * Returns the address of the heap-allocated Image struct it
@@ -16,9 +17,51 @@
 Image * read_ppm(FILE *fp) {
 
   // check that fp is not NULL
-  assert(fp); 
+  assert(fp);
+  
+  //check that file is PPM file
+  char buf[3];
+  for(int i = 0; i < 3; i++){
+    buf[i] = getc(fp);
+  }
+  assert(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]));
 
-  return NULL;  //TO DO: replace this stub
+  //ignoring comment line
+  char c = getc(fp);
+  if(c == '#'){
+    while(c != '\n'){
+      c = getc(fp);
+    }
+  }
+  ungetc(c, fp);//puts c back into input stream so w/h are read properly
+  
+  //reading width/height of image
+  int w = 0;
+  int h = 0;
+  fscanf(fp, "%d %d", &w, &h);
+  
+  //making sure maxval is 255
+  int maxval = 0;
+  fscanf(fp, "%d", &maxval);
+  if(maxval != 255){
+    printf("Maxval != 255!\n");
+    return NULL;
+  }
+  c=getc(fp);
+
+  Pixel pixels[w*h];
+  
+  fread(pixels, sizeof(Pixel), w*h, fp);
+  //printf("%d\n", (int)pixels[3].r);
+  
+  
+  Image * im = malloc(sizeof(Image));
+  //printf("ss\n");
+  im -> data = pixels;
+  im -> cols = w;
+  im -> rows = h; 
+  
+  return im;  //TO DO: replace this stub
   
 }
 
