@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <math.h>
 
 /* Read a PPM-formatted image from a file (assumes fp != NULL).
  * Returns the address of the heap-allocated Image struct it
@@ -24,6 +25,7 @@ Image * read_ppm(FILE *fp) {
   for(int i = 0; i < 3; i++){
     buf[i] = getc(fp);
   }
+  //printf("%c%c%c\n", buf[0], buf[1], buf[2]);
   assert(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]));
 
   //ignoring comment line
@@ -91,3 +93,28 @@ int write_ppm(FILE *fp, const Image *im) {
   return num_pixels_written;
 }
 
+Image * exposure(Image * orig, float ev){
+  Image * new = malloc(sizeof(Image));;
+  //printf("%d\n", orig->data[329].r);
+  Pixel *pixels = malloc(sizeof(Pixel)*orig->rows*orig->cols);
+  new->data = pixels;
+  new->rows = orig->rows;
+  new->cols = orig->cols;
+  for(int i = 0; i < (orig->rows)*(orig->cols); i++){
+    //printf("%d\n", orig->data[321].r);
+    new->data[i].r = orig->data[i].r * pow(2, ev);
+    new->data[i].g = orig->data[i].g * pow(2, ev);
+    new->data[i].b = orig->data[i].b * pow(2, ev);
+    if(new->data[i].r >= 255){
+      new->data[i].r = 255;
+    }
+    if(new->data[i].g >= 255){
+      new->data[i].g = 255;
+    }
+    if(new->data[i].b >= 255){
+      new->data[i].b = 255;
+    }
+  }
+  //printf("%d\n", orig->data[329].r);
+  return new;
+}

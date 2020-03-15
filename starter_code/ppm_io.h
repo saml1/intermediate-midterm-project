@@ -1,5 +1,5 @@
-
-// __Add your name and JHED above__
+//Brayden Archer and Sam Lipschitz
+//barcher9 and slipsch3
 // ppm_io.h
 // 601.220, Spring 2019
 // Starter code for midterm project - feel free to edit/add to this file
@@ -7,7 +7,7 @@
 
 #ifndef PPM_IO_H
 #define PPM_IO_H
-
+#include <math.h>
 #include <stdio.h>
 
 /* A struct to store a single RGB pixel, one byte per color channel.
@@ -46,5 +46,6 @@ Image * read_ppm(FILE *fp);
  */
 int write_ppm(FILE *fp, const Image *im);
 
+Image * exposure(Image * orig, float ev);
 
 #endif
