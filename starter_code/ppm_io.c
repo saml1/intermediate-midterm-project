@@ -102,10 +102,24 @@ Image * exposure(Image * orig, float ev){
   new->cols = orig->cols;
   for(int i = 0; i < (orig->rows)*(orig->cols); i++){
     //printf("%d\n", orig->data[321].r);
-    new->data[i].r = orig->data[i].r * pow(2, ev);
-    new->data[i].g = orig->data[i].g * pow(2, ev);
-    new->data[i].b = orig->data[i].b * pow(2, ev);
-    if(new->data[i].r >= 255){
+    if(orig->data[i].r * pow(2, ev) > 255){
+      new->data[i].r = 255;
+    }else{
+      new->data[i].r = orig->data[i].r * pow(2, ev);
+    }
+    if(orig->data[i].g * pow(2, ev) > 255){
+      new->data[i].g = 255;
+    }else{
+      new->data[i].g = orig->data[i].g * pow(2, ev);
+    }
+    if(orig->data[i].b * pow(2, ev) > 255){
+      new->data[i].b = 255;
+    }else{
+      new->data[i].b = orig->data[i].b * pow(2, ev);
+    }
+    /*new->data[i].g = orig->data[i].g * pow(2, ev);
+      new->data[i].b = orig->data[i].b * pow(2, ev);*/
+    /*if(new->data[i].r >= 255){
       new->data[i].r = 255;
     }
     if(new->data[i].g >= 255){
@@ -113,7 +127,7 @@ Image * exposure(Image * orig, float ev){
     }
     if(new->data[i].b >= 255){
       new->data[i].b = 255;
-    }
+      }*/
   }
   //printf("%d\n", orig->data[329].r);
   return new;
