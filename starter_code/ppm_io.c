@@ -49,7 +49,8 @@ Image * read_ppm(FILE *fp) {
   }
   c=getc(fp);
 
-  Pixel pixels[w*h];
+  //Pixel pixels[w*h];
+  Pixel *pixels = malloc(sizeof(Pixel)*w*h);
   
   fread(pixels, sizeof(Pixel), w*h, fp);
   //printf("%d\n", (int)pixels[3].r);
