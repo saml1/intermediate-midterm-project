@@ -132,3 +132,34 @@ Image * exposure(Image * orig, float ev){
   //printf("%d\n", orig->data[329].r);
   return new;
 }
+
+Image * blend(Image * input1, Image * input2, float alpha) {
+  Image * new = malloc(sizeof(Image)); //Allocate memory for the new outut Image
+  Pixel *in1p = malloc(sizeof(Pixel) * input1->rows * input1->cols);
+  Pixel *in2p = malloc(sizeof(Pixel) * input2->rows * input2->cols);
+  new->data = in1p; //Setting base pixels as image 1
+  new->rows = in1p->rows;
+  new->cols = in1p->cols;
+
+  for(int i = 0; i < (in1p->rows) * (in1p->cols); i++) {
+    float r = alpha * (in1p->data[i].r) + (1-alpha) * (in2p->data[i].r);
+    float g = alpha * (in1p->data[i].g) + (1-alpha) * (in2p->data[i].g);
+    float b = alpha * (in1p->data[i].b) + (1-alpha) * (in2p->data[i].b);
+    if(r > 255)
+      new->data[i].r = 255;
+    else
+      new->data[i].r = r;
+    if (g > 255)
+      new->data[i].g = 255;
+    else
+      new->data[i].g = g;
+    if (b > 255)
+      new->data[i].b = 255;
+    else
+      new->data[i].b = b;
+    }
+  free(in1p);
+  free(in2p);
+  return new;
+}
+  
