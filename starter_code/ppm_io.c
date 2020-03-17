@@ -155,8 +155,8 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   int row1 = 0;
   int col2 = 0;
   int row2 = 0;
-  int cur_row = 0;
-  int cur_col = 0;
+  //int cur_row = 0;
+  //int cur_col = 0;
   int atSingleRows = 0;
   //Pixel * pixels = malloc(sizeof(Pixel)* rows * cols);
   new->data = pixels;
@@ -164,7 +164,8 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   new-> cols = cols;
   //TODO: add case for row 0/col 0
   //looping through each pixel in new image
-  for(int i = 0; i < rows*cols; i++){
+  for(int i = 0; i < rows * cols; i++){
+    printf("%d ", i);
     //Pixel * pixel1 = malloc(sizeof(Pixel));
     //Pixel * pixel2 = malloc(sizeof(Pixel));
     /*Pixel * pixels = malloc(sizeof(Pixel)* rows * cols);
@@ -201,7 +202,7 @@ Image * blend(Image * input1, Image * input2, float alpha) {
       }else{
 	col2+=1;
       }
-    }/*else{
+    }else{
       if(col1 +1 > input2->cols){//if at a col that doesn't exist for input2
 	new->data[i].r = input1->data[(row1*input1->cols)+col1].r;
 	new->data[i].g = input1->data[(row1*input1->cols)+col1].g;
@@ -238,7 +239,7 @@ Image * blend(Image * input1, Image * input2, float alpha) {
 	new->data[i].b = 0;
 	printf("fuck");
       }
-    }*/ 
+    } 
   }
   /*Pixel *in1p = malloc(sizeof(Pixel) * input1->rows * input1->cols);
   Pixel *in2p = malloc(sizeof(Pixel) * input2->rows * input2->cols);
