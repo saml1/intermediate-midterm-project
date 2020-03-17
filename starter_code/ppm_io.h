@@ -48,4 +48,5 @@ int write_ppm(FILE *fp, const Image *im);
 
 Image * exposure(Image * orig, float ev);
 
+Image * blend(Image * input1, Image * input2, float alpha);
 #endif
