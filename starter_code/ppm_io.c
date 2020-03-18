@@ -139,25 +139,16 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   //finding max value of rows and cols
   int rows = 0;
   int cols = 0;
-  /*if(input1->rows > input2->rows){
-    rows = input1->rows;
-  }else{
-    rows = input2->rows;
-  }
-  if(input1->cols > input2->cols){
-    cols = input1->cols;
-  }else{
-    cols = input2->cols;
-    }*/
   rows = fmax(input1->rows, input2->rows);
   cols = fmax(input1->cols, input2->cols);
-
-  Pixel * pixels = malloc(sizeof(Pixel) * rows * cols);
+  printf("%d %d\n", rows, cols);
+  //Pixel * pixels = (Pixel *)malloc(sizeof(Pixel) * (rows) * (cols));
+  new->data = (Pixel *)malloc(sizeof(Pixel) * (rows) * (cols));
   int col1 = 0;
   int row1 = 0;
   int col2 = 0;
   int row2 = 0;
-  new->data = pixels;
+  //new->data = pixels;
   new->rows = rows;
   new->cols = cols;
   int sameDims = 0;
@@ -204,6 +195,7 @@ Image * blend(Image * input1, Image * input2, float alpha) {
     Pixel pix1[input1->rows][input1->cols];
     Pixel pix2[input2->rows][input2->cols];
     Pixel newPix2d[(int)fmax(input1->rows, input2->rows)][(int)fmax(input1->cols, input2->cols)];
+    
     //converting both 1D pixel arrays into 2D
     for(int i = 0; i < input1->rows; i++){
       for(int j = 0; j < input1->cols; j++){
@@ -289,7 +281,8 @@ Image * blend(Image * input1, Image * input2, float alpha) {
     //setting 1D pixel array of output to 2D array
     for(int i = 0; i < rows; i++){
       for(int j = 0; j < cols; j++){
-	pixels[(i * cols) + j] = newPix2d[i][j];
+	//pixels[(i * cols) + j] = newPix2d[i][j];
+	new->data[(i * cols) + j] = newPix2d[i][j];
       }
     }
   }
