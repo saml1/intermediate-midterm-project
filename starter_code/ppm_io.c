@@ -141,7 +141,7 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   int cols = 0;
   rows = fmax(input1->rows, input2->rows);
   cols = fmax(input1->cols, input2->cols);
-  printf("%d %d\n", rows, cols);
+  //printf("%d %d\n", rows, cols);
   //Pixel * pixels = (Pixel *)malloc(sizeof(Pixel) * (rows) * (cols));
   new->data = (Pixel *)malloc(sizeof(Pixel) * (rows) * (cols));
   //new->data = malloc(735792);
@@ -193,9 +193,25 @@ Image * blend(Image * input1, Image * input2, float alpha) {
       } 
     }
   }else{
-    Pixel pix1[input1->rows][input1->cols];
-    Pixel pix2[input2->rows][input2->cols];
-    Pixel newPix2d[(int)fmax(input1->rows, input2->rows)][(int)fmax(input1->cols, input2->cols)];
+    //Pixel pix1[input1->rows][input1->cols];
+    //Pixel pix2[input2->rows][input2->cols];
+    Pixel ** pix1;
+    pix1 = malloc(input1->rows * sizeof(*pix1));
+    for(int i = 0; i < input1->rows; i++){
+      pix1[i] = malloc(input1->cols * sizeof(pix1[0]));
+    }
+    Pixel ** pix2;
+    pix2 = malloc(input2->rows * sizeof(*pix2));
+    for(int i = 0; i < input2->rows; i++){
+      pix2[i] = malloc(input2->cols * sizeof(pix2[0]));
+    }
+    //Pixel newPix2d[(int)fmax(input1->rows, input2->rows)][(int)fmax(input1->cols, input2->cols)];
+    Pixel ** newPix2d;
+    newPix2d = malloc(rows * sizeof(*newPix2d));
+    for(int i = 0; i < rows; i++){
+      newPix2d[i] = malloc(cols * sizeof(newPix2d[0]));
+    }
+    //allocating all pixels initially to 0/0/0
     for(int i = 0; i < rows; i++){
       for(int j = 0; j < cols; j++){
 	newPix2d[i][j].r = 0;
@@ -296,6 +312,18 @@ Image * blend(Image * input1, Image * input2, float alpha) {
 	new->data[(i * cols) + j] = newPix2d[i][j];
       }
     }
+    for(int i = 0; i < rows; i++){
+      free(newPix2d[i]);
+    }
+    free(newPix2d);
+    for(int i = 0; i < input1->rows; i++){
+      free(pix1[i]);
+    }
+    free(pix1);
+    for(int i = 0; i < input2->rows; i++){
+      free(pix2[i]);
+    }
+    free(pix2);
   }
   return new;
 }
