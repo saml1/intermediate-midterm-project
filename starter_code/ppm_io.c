@@ -139,7 +139,7 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   //finding max value of rows and cols
   int rows = 0;
   int cols = 0;
-  if(input1->rows > input2->rows){
+  /*if(input1->rows > input2->rows){
     rows = input1->rows;
   }else{
     rows = input2->rows;
@@ -148,7 +148,9 @@ Image * blend(Image * input1, Image * input2, float alpha) {
     cols = input1->cols;
   }else{
     cols = input2->cols;
-  }
+    }*/
+  rows = fmax(input1->rows, input2->rows);
+  cols = fmax(input1->cols, input2->cols);
 
   Pixel * pixels = malloc(sizeof(Pixel) * rows * cols);
   int col1 = 0;
@@ -156,8 +158,8 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   int col2 = 0;
   int row2 = 0;
   new->data = pixels;
-  new -> rows = rows;
-  new-> cols = cols;
+  new->rows = rows;
+  new->cols = cols;
   int sameDims = 0;
   if((input1->rows == input2->rows) && (input1->cols == input2->cols)){
     sameDims = 1;
@@ -233,20 +235,55 @@ Image * blend(Image * input1, Image * input2, float alpha) {
 	}
       }
     }
+    //finding which image has greater amount of rows and cols
     int bigColIs1 = 0;
     int bigRowIs1 = 0;
+    //setting to -1 if row or col is equal 
+    if(input1->rows == input2->rows){
+      bigRowIs1 = -1;
+    }
+    if(input1->cols == input2->cols){
+      bigColIs1 = -1;
+    }
     if(input1->rows > input2->rows){
       bigRowIs1 = 1;
     }
     if(input1->cols > input2->cols){
       bigColIs1 = 1;
     }
+    //setting color channels of non-overlapping rows to that of image with greater rows
     for(int i = fmin(input1->rows, input2->rows); i < rows; i++){
-      if(bigRowIs1){
+      if(bigRowIs1 == 1){
 	for(int j = 0; j < input1->cols; j++){
-	  
+	  newPix2d[i][j].r = pix1[i][j].r;
+	  newPix2d[i][j].g = pix1[i][j].g;
+	  newPix2d[i][j].b  = pix1[i][j].b;
+	}
+      }else if(bigRowIs1 == 0){
+	for(int j = 0; j < input2->cols; j++){
+          newPix2d[i][j].r = pix2[i][j].r;
+          newPix2d[i][j].g = pix2[i][j].g;
+          newPix2d[i][j].b  = pix2[i][j].b;
 	}
       }
+    }
+    if(bigColIs1 == 1){
+      for(int i = 0; i < input1->rows; i++){
+	for(int j = fmin(input1->cols, input2->cols); j < cols; j++){
+	  newPix2d[i][j].r = pix1[i][j].r;
+          newPix2d[i][j].g = pix1[i][j].g;
+          newPix2d[i][j].b  = pix1[i][j].b;
+	}
+      }
+    }
+    if(bigColIs1 == 0){
+      for(int i = 0; i < input2->rows; i++){
+	for(int j = fmin(input1->cols, input2->cols); j < cols; j++){
+          newPix2d[i][j].r = pix2[i][j].r;
+          newPix2d[i][j].g = pix2[i][j].g;
+          newPix2d[i][j].b  = pix2[i][j].b;
+	}
+      } 
     }
     //for(int i = fmin(input1->cols, input2->cols)
     //setting 1D pixel array of output to 2D array
