@@ -155,118 +155,107 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   int row1 = 0;
   int col2 = 0;
   int row2 = 0;
-  //int cur_row = 0;
-  //int cur_col = 0;
-  int atSingleRows = 0;
-  //Pixel * pixels = malloc(sizeof(Pixel)* rows * cols);
   new->data = pixels;
   new -> rows = rows;
   new-> cols = cols;
-  //TODO: add case for row 0/col 0
+  int sameDims = 0;
+  if((input1->rows == input2->rows) && (input1->cols == input2->cols)){
+    sameDims = 1;
+  }
   //looping through each pixel in new image
-  for(int i = 0; i < rows * cols; i++){
-    printf("%d ", i);
-    //Pixel * pixel1 = malloc(sizeof(Pixel));
-    //Pixel * pixel2 = malloc(sizeof(Pixel));
-    /*Pixel * pixels = malloc(sizeof(Pixel)* rows * cols);
-    new->data = pixels;
-    new -> rows = rows;
-    new-> cols = cols;*/
-    //if the rows/cols match up for both images simply use given calculation
-    if((row1==row2) && (col1 == col2)){
-      if(alpha*input1->data[i].r + (1-alpha)*input2->data[i].r > 255){
-	new->data[i].r = 255;
-      }else{
-	new->data[i].r = alpha*input1->data[i].r + (1-alpha)*input2->data[i].r;
-      }
-      if(alpha*input1->data[i].g + (1-alpha)*input2->data[i].g > 255){
-	new->data[i].g = 255;
-      }else{
-	new->data[i].g = alpha*input1->data[i].g + (1-alpha)*input2->data[i].g;
-      }
-      if(alpha*input1->data[i].b + (1-alpha)*input2->data[i].b > 255){
-	new->data[i].b = 255;
-      }else{
-	new->data[i].b = alpha*input1->data[i].b + (1-alpha)*input2->data[i].b;
-      }
-      //finding "coordinate" of pixel from each input
-      if(i+1 % input1->cols == 0){
-	row1 += 1;
-	col1 = 0;
-      }else{
-	col1+=1;
-      }
-      if(i+1 % input2->cols == 0){
-	row2 += 1;
-	col2 = 0;
-      }else{
-	col2+=1;
-      }
-    }else{
-      if(col1 +1 > input2->cols){//if at a col that doesn't exist for input2
-	new->data[i].r = input1->data[(row1*input1->cols)+col1].r;
-	new->data[i].g = input1->data[(row1*input1->cols)+col1].g;
-	new->data[i].b = input1->data[(row1*input1->cols)+col1].b;
-	if(i+1 % input1->cols == 0 && row1 +1 < input1->rows){//if at end of a col and another row exists for input1
+  if(sameDims){
+    for(int i = 0; i < rows * cols; i++){
+    
+      //if the rows/cols match up for both images simply use given calculation
+      if((row1==row2) && (col1 == col2)){
+	if((alpha*(input1->data[i].r) + (1-alpha)*(input2->data[i].r)) > 255){
+	  new->data[i].r = 255;
+	}else{
+	  new->data[i].r = alpha*input1->data[i].r + (1-alpha)*input2->data[i].r;
+	}
+	if(alpha*input1->data[i].g + (1-alpha)*input2->data[i].g > 255){
+	  new->data[i].g = 255;
+	}else{
+	  new->data[i].g = alpha*input1->data[i].g + (1-alpha)*input2->data[i].g;
+	}
+	if(alpha*input1->data[i].b + (1-alpha)*input2->data[i].b > 255){
+	  new->data[i].b = 255;
+	}else{
+	  new->data[i].b = alpha*input1->data[i].b + (1-alpha)*input2->data[i].b;
+	}
+	//finding "coordinate" of pixel from each input
+	if((i+1) % input1->cols == 0){
 	  row1 += 1;
 	  col1 = 0;
-	}else if(row1 +1 < input1->rows){//if not at end of col
+	}else{
 	  col1+=1;
 	}
-	else{//at last row of input1 
-	  row2 += 1;
-	  col2 = 0;
-	  atSingleRows = 1;
-	}
-      }else if(col1 == 0 && atSingleRows == 0){//if just started new col for input1 (where input1 has bigger col)
-	col2 = 0;
-	row2 = row1;
-      }
-      if(atSingleRows == 1 && row2 + 1 < input2->rows){
-	new->data[i].r = input2->data[(row2*input2->cols)+col2].r;
-	new->data[i].g = input2->data[(row2*input2->cols)+col2].g;
-	new->data[i].b = input2->data[(row2*input2->cols)+col2].b;
-	if(i+1 % input2->cols == 0){
+	if((i+1) % input2->cols == 0){
 	  row2 += 1;
 	  col2 = 0;
 	}else{
 	  col2+=1;
 	}
-      }
-      else if(atSingleRows == 1){
-	new->data[i].r = 0;
-	new->data[i].g = 0;
-	new->data[i].b = 0;
-	printf("fuck");
-      }
-    } 
-  }
-  /*Pixel *in1p = malloc(sizeof(Pixel) * input1->rows * input1->cols);
-  Pixel *in2p = malloc(sizeof(Pixel) * input2->rows * input2->cols);
-  new->data = in1p; //Setting base pixels as image 1
-  new->rows = in1p->rows;
-  new->cols = in1p->cols;
-
-  for(int i = 0; i < (in1p->rows) * (in1p->cols); i++) {
-    float r = alpha * (in1p->data[i].r) + (1-alpha) * (in2p->data[i].r);
-    float g = alpha * (in1p->data[i].g) + (1-alpha) * (in2p->data[i].g);
-    float b = alpha * (in1p->data[i].b) + (1-alpha) * (in2p->data[i].b);
-    if(r > 255)
-      new->data[i].r = 255;
-    else
-      new->data[i].r = r;
-    if (g > 255)
-      new->data[i].g = 255;
-    else
-      new->data[i].g = g;
-    if (b > 255)
-      new->data[i].b = 255;
-    else
-      new->data[i].b = b;
+      } 
     }
-  free(in1p);
-  free(in2p);*/
-  
+  }else{
+    Pixel pix1[input1->rows][input1->cols];
+    Pixel pix2[input2->rows][input2->cols];
+    Pixel newPix2d[(int)fmax(input1->rows, input2->rows)][(int)fmax(input1->cols, input2->cols)];
+    //converting both 1D pixel arrays into 2D
+    for(int i = 0; i < input1->rows; i++){
+      for(int j = 0; j < input1->cols; j++){
+	pix1[i][j] = input1->data[(i*input1->cols) + j];
+      }
+    }
+    for(int i = 0; i < input2->rows; i++){
+      for(int j = 0; j < input2->cols; j++){
+	pix2[i][j] = input2->data[(i*input2->cols) + j];
+      }
+    }
+    //blending all possible pixels 
+    for(int i = 0; i < fmin(input1->rows, input2->rows); i++){
+      for(int j = 0; j < fmin(input1->cols, input2->cols); j++){
+	if((alpha*pix1[i][j].r + (1 - alpha)*pix2[i][j].r) > 255){
+	  newPix2d[i][j].r = 255;
+	}else{
+	  newPix2d[i][j].r = alpha*pix1[i][j].r + (1 - alpha)*pix2[i][j].r;
+	}
+	if((alpha*pix1[i][j].g + (1 - alpha)*pix2[i][j].g) > 255){
+          newPix2d[i][j].g = 255;
+	}else{
+          newPix2d[i][j].g = alpha*pix1[i][j].g + (1 - alpha)*pix2[i][j].g;
+	}
+	if((alpha*pix1[i][j].b + (1 - alpha)*pix2[i][j].b) > 255){
+          newPix2d[i][j].b = 255;
+	}else{
+          newPix2d[i][j].b = alpha*pix1[i][j].b + (1 - alpha)*pix2[i][j].b;
+	}
+      }
+    }
+    int bigColIs1 = 0;
+    int bigRowIs1 = 0;
+    if(input1->rows > input2->rows){
+      bigRowIs1 = 1;
+    }
+    if(input1->cols > input2->cols){
+      bigColIs1 = 1;
+    }
+    for(int i = fmin(input1->rows, input2->rows); i < rows; i++){
+      if(bigRowIs1){
+	for(int j = 0; j < input1->cols; j++){
+	  
+	}
+      }
+    }
+    //for(int i = fmin(input1->cols, input2->cols)
+    //setting 1D pixel array of output to 2D array
+    for(int i = 0; i < rows; i++){
+      for(int j = 0; j < cols; j++){
+	pixels[(i * cols) + j] = newPix2d[i][j];
+      }
+    }
+  }
   return new;
 }
   
