@@ -25,7 +25,6 @@ Image * read_ppm(FILE *fp) {
   for(int i = 0; i < 3; i++){
     buf[i] = getc(fp);
   }
-  //printf("%c%c%c\n", buf[0], buf[1], buf[2]);
   assert(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]));
 
   //ignoring comment line
@@ -51,20 +50,15 @@ Image * read_ppm(FILE *fp) {
   }
   c=getc(fp);
 
-  //Pixel pixels[w*h];
   Pixel *pixels = malloc(sizeof(Pixel)*w*h);
   
   fread(pixels, sizeof(Pixel), w*h, fp);
-  //printf("%d\n", (int)pixels[3].r);
-  
-  
   Image * im = malloc(sizeof(Image));
-  //printf("ss\n");
   im -> data = pixels;
   im -> cols = w;
   im -> rows = h; 
   
-  return im;  //TO DO: replace this stub
+  return im;
   
 }
 
@@ -93,15 +87,14 @@ int write_ppm(FILE *fp, const Image *im) {
   return num_pixels_written;
 }
 
-Image * exposure(Image * orig, float ev){
+/* Takes Image * fp and returns a new Image * with modified exposure ev. */
+Image * exposure(const Image * orig, float ev){
   Image * new = malloc(sizeof(Image));;
-  //printf("%d\n", orig->data[329].r);
   Pixel *pixels = malloc(sizeof(Pixel)*orig->rows*orig->cols);
   new->data = pixels;
   new->rows = orig->rows;
   new->cols = orig->cols;
   for(int i = 0; i < (orig->rows)*(orig->cols); i++){
-    //printf("%d\n", orig->data[321].r);
     if(orig->data[i].r * pow(2, ev) > 255){
       new->data[i].r = 255;
     }else{
@@ -117,23 +110,14 @@ Image * exposure(Image * orig, float ev){
     }else{
       new->data[i].b = orig->data[i].b * pow(2, ev);
     }
-    /*new->data[i].g = orig->data[i].g * pow(2, ev);
-      new->data[i].b = orig->data[i].b * pow(2, ev);*/
-    /*if(new->data[i].r >= 255){
-      new->data[i].r = 255;
-    }
-    if(new->data[i].g >= 255){
-      new->data[i].g = 255;
-    }
-    if(new->data[i].b >= 255){
-      new->data[i].b = 255;
-      }*/
   }
-  //printf("%d\n", orig->data[329].r);
   return new;
 }
 
-Image * blend(Image * input1, Image * input2, float alpha) {
+/* Takes two Image *'s and returns a blended image of the two with
+ * ratio alpha.
+ */
+Image * blend(const Image * input1, const Image * input2, float alpha) {
   Image * new = malloc(sizeof(Image)); //Allocate memory for the new outut Image
 
   //finding max value of rows and cols
@@ -141,15 +125,11 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   int cols = 0;
   rows = fmax(input1->rows, input2->rows);
   cols = fmax(input1->cols, input2->cols);
-  //printf("%d %d\n", rows, cols);
-  //Pixel * pixels = (Pixel *)malloc(sizeof(Pixel) * (rows) * (cols));
   new->data = (Pixel *)malloc(sizeof(Pixel) * (rows) * (cols));
-  //new->data = malloc(735792);
   int col1 = 0;
   int row1 = 0;
   int col2 = 0;
   int row2 = 0;
-  //new->data = pixels;
   new->rows = rows;
   new->cols = cols;
   int sameDims = 0;
@@ -193,8 +173,6 @@ Image * blend(Image * input1, Image * input2, float alpha) {
       } 
     }
   }else{
-    //Pixel pix1[input1->rows][input1->cols];
-    //Pixel pix2[input2->rows][input2->cols];
     Pixel ** pix1;
     pix1 = malloc(input1->rows * sizeof(*pix1));
     for(int i = 0; i < input1->rows; i++){
@@ -205,7 +183,6 @@ Image * blend(Image * input1, Image * input2, float alpha) {
     for(int i = 0; i < input2->rows; i++){
       pix2[i] = malloc(input2->cols * sizeof(pix2[0]));
     }
-    //Pixel newPix2d[(int)fmax(input1->rows, input2->rows)][(int)fmax(input1->cols, input2->cols)];
     Pixel ** newPix2d;
     newPix2d = malloc(rows * sizeof(*newPix2d));
     for(int i = 0; i < rows; i++){
@@ -219,9 +196,6 @@ Image * blend(Image * input1, Image * input2, float alpha) {
 	newPix2d[i][j].b = 0;
       }
     }
-    //free(new->data);
-    //new->data = (Pixel*)malloc(sizeof(newPix2d));
-    //printf("%d\n", (int)sizeof(newPix2d));
     //converting both 1D pixel arrays into 2D
     for(int i = 0; i < input1->rows; i++){
       for(int j = 0; j < input1->cols; j++){
@@ -303,12 +277,9 @@ Image * blend(Image * input1, Image * input2, float alpha) {
 	}
       } 
     }
-    
-    //for(int i = fmin(input1->cols, input2->cols)
     //setting 1D pixel array of output to 2D array
     for(int i = 0; i < rows; i++){
       for(int j = 0; j < cols; j++){
-	//pixels[(i * cols) + j] = newPix2d[i][j];
 	new->data[(i * cols) + j] = newPix2d[i][j];
       }
     }
@@ -327,4 +298,80 @@ Image * blend(Image * input1, Image * input2, float alpha) {
   }
   return new;
 }
-  
+
+/* Takes image and returns new Image * with a pointilism-like effect */
+Image * pointilism(const Image * im){
+  int numPix = im->rows * im->cols;
+  Image * new = malloc(sizeof(Image));
+  new->rows = im->rows;
+  new->cols = im->cols;
+  new->data = malloc(sizeof(Pixel)* numPix);
+  //converting to 2d array
+  Pixel ** pix2d;
+  pix2d = malloc(im->rows * sizeof(*pix2d));
+  for(int i = 0; i < im->rows; i++){
+    pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
+  }
+  //randomly picking 3% of pixels and applying pointilism effect
+  int curx = 0;
+  int cury = 0;
+  int curr = 0;
+  for(int i = 0; i < im->rows; i++){
+    for(int j = 0; j < im->cols; j++){
+      pix2d[i][j]= im->data[(i * im->cols) + j];
+      //pix2d[i][j].g = 0;
+      //pix2d[i][j].b = 0;
+    }
+  }
+  for(int i = 0; i < numPix * 0.03; i++){
+    curx = rand() % im->cols;
+    cury = rand() % im->rows;
+    curr = rand() % 5 + 1;
+    //starting at pixel curr up and curr to the left
+    for(int i = cury - curr; i < cury + curr + 1; i++){
+      for(int j = curx - curr; j < curx + curr + 1; j++){
+	//if pixel exists
+	if((i >= 0) && (i < im->rows) && (j >= 0) && (j < im->cols)){
+	  //if pixel is within radius (using distance formula) set its color to center of circle
+	  if(sqrt(pow((i-cury), 2) + pow((j-curx),2)) < (double)curr){
+	    pix2d[i][j].r = pix2d[cury][curx].r;
+	    pix2d[i][j].g = pix2d[cury][curx].g;
+	    pix2d[i][j].b = pix2d[cury][curx].b;
+	    //printf("%d\n", (int)pix2d[i][j].r);
+	  }
+	}
+      }
+    }
+    /*for(int i = 1; i < curr + 1; i++){
+      pix2d[curx][cury + i].r = pix2d[curx][cury].r;
+      pix2d[curx][cury + i].g = pix2d[curx][cury].g;
+      pix2d[curx][cury + i].b = pix2d[curx][cury].b;
+
+      pix2d[curx][cury - i].r = pix2d[curx][cury].r;
+      pix2d[curx][cury - i].g = pix2d[curx][cury].g;
+      pix2d[curx][cury - i].b = pix2d[curx][cury].b;
+
+      pix2d[curx + i][cury].r = pix2d[curx][cury].r;
+      pix2d[curx + i][cury].g = pix2d[curx][cury].g;
+      pix2d[curx + i][cury].b = pix2d[curx][cury].b;
+
+      pix2d[curx - i][cury].r = pix2d[curx][cury].r;
+      pix2d[curx - i][cury].g = pix2d[curx][cury].g;
+      pix2d[curx - i][cury].b = pix2d[curx][cury].b;
+      }*/
+  }
+  //setting im->data to pix2d
+  for(int i = 0; i < im->rows; i++){
+    for(int j = 0; j < im->cols; j++){
+      new->data[(i * im->cols) + j] = pix2d[i][j];
+    }
+  }
+  //printf("%d\n", (int)new->data[1028].r);
+  //printf("%d\n", (int)pix2d[345][542].r);
+  //freeing 2d array
+  for(int i = 0; i < im->rows; i++){
+    free(pix2d[i]);
+  }
+  free(pix2d);
+  return new;
+}

@@ -46,7 +46,14 @@ Image * read_ppm(FILE *fp);
  */
 int write_ppm(FILE *fp, const Image *im);
 
-Image * exposure(Image * orig, float ev);
+/* Takes Image * fp and returns a new Image * with modified exposure ev. */
+Image * exposure(const Image * orig, float ev);
 
-Image * blend(Image * input1, Image * input2, float alpha);
+/* Takes two Image *'s and returns a blended image of the two with
+ * ratio alpha.
+ */
+Image * blend(const Image * input1, const Image * input2, float alpha);
+
+/* Takes image and returns new Image * with a pointilism-like effect */
+Image * pointilism(const Image * im);
 #endif
