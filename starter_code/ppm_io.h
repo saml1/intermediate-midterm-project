@@ -9,6 +9,7 @@
 #define PPM_IO_H
 #include <math.h>
 #include <stdio.h>
+#define PI 3.1415926535
 
 /* A struct to store a single RGB pixel, one byte per color channel.
  */
@@ -56,4 +57,15 @@ Image * blend(const Image * input1, const Image * input2, float alpha);
 
 /* Takes image and returns new Image * with a pointilism-like effect */
 Image * pointilism(const Image * im);
+
+/* Returns blurred version of given Image.
+ * When sigma is larger, the output will have a stronger blurred effect. 
+ */
+Image* blur(const Image * im, double sigma);
+
+/* Returns the square of the given double. */
+double sq(double p);
+
+/* Returns a 2D double Gaussian matrix with variance sigma. */
+double ** createGM(double sigma);
 #endif

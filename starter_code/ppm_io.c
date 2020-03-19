@@ -172,7 +172,8 @@ Image * blend(const Image * input1, const Image * input2, float alpha) {
 	}
       } 
     }
-  }else{
+  }else{//if rows/cols don't match for both images
+    //creating 2D Pixel arrays for both images
     Pixel ** pix1;
     pix1 = malloc(input1->rows * sizeof(*pix1));
     for(int i = 0; i < input1->rows; i++){
@@ -319,8 +320,6 @@ Image * pointilism(const Image * im){
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
       pix2d[i][j]= im->data[(i * im->cols) + j];
-      //pix2d[i][j].g = 0;
-      //pix2d[i][j].b = 0;
     }
   }
   for(int i = 0; i < numPix * 0.03; i++){
@@ -337,28 +336,11 @@ Image * pointilism(const Image * im){
 	    pix2d[i][j].r = pix2d[cury][curx].r;
 	    pix2d[i][j].g = pix2d[cury][curx].g;
 	    pix2d[i][j].b = pix2d[cury][curx].b;
-	    //printf("%d\n", (int)pix2d[i][j].r);
 	  }
 	}
       }
     }
-    /*for(int i = 1; i < curr + 1; i++){
-      pix2d[curx][cury + i].r = pix2d[curx][cury].r;
-      pix2d[curx][cury + i].g = pix2d[curx][cury].g;
-      pix2d[curx][cury + i].b = pix2d[curx][cury].b;
 
-      pix2d[curx][cury - i].r = pix2d[curx][cury].r;
-      pix2d[curx][cury - i].g = pix2d[curx][cury].g;
-      pix2d[curx][cury - i].b = pix2d[curx][cury].b;
-
-      pix2d[curx + i][cury].r = pix2d[curx][cury].r;
-      pix2d[curx + i][cury].g = pix2d[curx][cury].g;
-      pix2d[curx + i][cury].b = pix2d[curx][cury].b;
-
-      pix2d[curx - i][cury].r = pix2d[curx][cury].r;
-      pix2d[curx - i][cury].g = pix2d[curx][cury].g;
-      pix2d[curx - i][cury].b = pix2d[curx][cury].b;
-      }*/
   }
   //setting im->data to pix2d
   for(int i = 0; i < im->rows; i++){
@@ -366,12 +348,51 @@ Image * pointilism(const Image * im){
       new->data[(i * im->cols) + j] = pix2d[i][j];
     }
   }
-  //printf("%d\n", (int)new->data[1028].r);
-  //printf("%d\n", (int)pix2d[345][542].r);
   //freeing 2d array
   for(int i = 0; i < im->rows; i++){
     free(pix2d[i]);
   }
   free(pix2d);
   return new;
+}
+
+/* Returns blurred version of given Image.
+ * When sigma is larger, the output will have a stronger blurred effect.
+ */
+Image* blur(const Image * im, double sigma){
+  Image * new = malloc(sizeof(Image));
+  
+  return new;
+}
+
+/* Returns the square of the given double. */
+double sq(double p){
+  return p * p;
+}
+
+/* Returns a 2D double Gaussian matrix with  variance sigma. */
+double ** createGM(double sigma){
+  int n = 10 * sigma;
+  if((n % 2) == 0){//if n is even
+    n += 1;
+  }
+  double ** gm = malloc(n * sizeof(double));
+  for(int i = 0; i < n; i++){
+    gm[i] = malloc(10 * sigma * sizeof(double));
+  }
+  //printf("%d\n", n/2);
+  /*for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      gm[i][j] = 6969;
+    }
+    }*/
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      double dy = abs(n / 2 - i);
+      double dx = abs(n / 2 - j);
+      gm[j][i] = (1.0 / (2.0 * PI * sq(sigma))) * exp( -(sq(dx) + sq(dy)) / (2 * sq(sigma)));
+      //printf("i = %d, j = %d, dx = %f, dy = %f, val = %f\n", i, j, dx, dy, gm[i][j]);
+    }
+  }
+  return gm;
 }
