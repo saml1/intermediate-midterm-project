@@ -367,29 +367,26 @@ Image* blur(const Image * im, double sigma){
   //creating 2D pixel array
   Pixel ** pix2d;
   pix2d = malloc(sizeof(*pix2d) * im->rows);
-  for(int i = 0; i < im->rows; i++){
+  for(int i = 0; i < im->rows; i++){                                                               
     pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
   }
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      new->data[(i * im->cols) + j] = pix2d[i][j];
-    }
-  }
-  for(int i = 0; i < im->rows; i++){
-    for(int j = 0; j < im->cols; j++){
-      pix2d[i][j] = *filterResponse(sigma, im, i, j);
+      Pixel * temp = filterResponse(sigma, im, i, j);
+      pix2d[i][j] = *temp;
+      free(temp);
     }
   }
   //setting new->data to 2D array
-  //TODO maybe: bring all for loops together(?)
-  /*for(int i = 0; i < im->rows; i++){
+  for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
       new->data[(i * im->cols) + j] = pix2d[i][j];
     }
-    }*/
+  }
   for(int i = 0; i < im->rows; i++){
     free(pix2d[i]);
   }
+  free(pix2d);
   return new;
 }
 
@@ -422,7 +419,8 @@ double ** createGM(double sigma){
 /* Returns filter response using filter gm for a Pixel in im with
  * given row and col.
  */
-Pixel * filterResponse(double sigma, const Image * im, int row, int col){
+Pixel* filterResponse(double sigma, const Image * im, int row, int col){
+  printf("In filter response, row %d col %d \n", row, col);
   int n = 10 * sigma;
   if((n % 2) == 0){//if n is even
     n += 1;
@@ -441,14 +439,17 @@ Pixel * filterResponse(double sigma, const Image * im, int row, int col){
   Pixel *output = malloc(sizeof(Pixel));
   //setting pixel at given row/col at center of matrix and multiplying each matrix element by
   //pixel value beneath it
-  for(int i = - n / 2; i < n / 2; i++){
-    for(int j = - n / 2; j < n/2; j++){
+  for(int i = - n / 2; i < n / 2 + 1; i++){
+    for(int j = - n / 2; j < n/2 + 1; j++){
       //if a Pixel exists below 
-      if((i >= -1) && (j >= 0) && (i < im->rows - 1) && (j < im->cols)){
-	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i) * im->cols + col + j].r;
-	filter_g[i + (n / 2)][j + (n / 2)] *= im->data[(row + i) * im->cols + col + j].g;
-	filter_b[i + (n / 2)][j + (n / 2)] *= im->data[(row + i) * im->cols + col + j].b;
+      if((i + row >= -1) && (j + col >= 0) && (i+ row < im->rows - 1) && (j + col < im->cols)){
+	//printf("no skip, i=%d, j= %d\n", i, j);
+	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i + 1) * im->cols + col + j].r;
+	//printf(" (pass)\n");
+	filter_g[i + (n / 2)][j + (n / 2)] *= im->data[(row + i + 1) * im->cols + col + j].g;
+	filter_b[i + (n / 2)][j + (n / 2)] *= im->data[(row + i + 1) * im->cols + col + j].b;
       }else{//if Pixel doesn't exist below, set to 0
+	//printf("skip, i=%d, j= %d\n", i, j);
 	filter_r[i + (n / 2)][j + (n / 2)] = 0;
 	filter_g[i + (n / 2)][j + (n / 2)] = 0;
 	filter_b[i + (n / 2)][j + (n / 2)] = 0;
