@@ -361,7 +361,35 @@ Image * pointilism(const Image * im){
  */
 Image* blur(const Image * im, double sigma){
   Image * new = malloc(sizeof(Image));
-  
+  new->rows = im->rows;
+  new->cols = im->cols;
+  new->data = malloc(sizeof(Pixel) * new->rows * new->cols); 
+  //creating 2D pixel array
+  Pixel ** pix2d;
+  pix2d = malloc(sizeof(*pix2d) * im->rows);
+  for(int i = 0; i < im->rows; i++){
+    pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
+  }
+  for(int i = 0; i < im->rows; i++){
+    for(int j = 0; j < im->cols; j++){
+      new->data[(i * im->cols) + j] = pix2d[i][j];
+    }
+  }
+  for(int i = 0; i < im->rows; i++){
+    for(int j = 0; j < im->cols; j++){
+      pix2d[i][j] = *filterResponse(sigma, im, i, j);
+    }
+  }
+  //setting new->data to 2D array
+  //TODO maybe: bring all for loops together(?)
+  /*for(int i = 0; i < im->rows; i++){
+    for(int j = 0; j < im->cols; j++){
+      new->data[(i * im->cols) + j] = pix2d[i][j];
+    }
+    }*/
+  for(int i = 0; i < im->rows; i++){
+    free(pix2d[i]);
+  }
   return new;
 }
 
@@ -376,23 +404,81 @@ double ** createGM(double sigma){
   if((n % 2) == 0){//if n is even
     n += 1;
   }
+  //don't forget to free everything eventually when this method is called
   double ** gm = malloc(n * sizeof(double));
   for(int i = 0; i < n; i++){
     gm[i] = malloc(10 * sigma * sizeof(double));
   }
-  //printf("%d\n", n/2);
-  /*for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      gm[i][j] = 6969;
-    }
-    }*/
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       double dy = abs(n / 2 - i);
       double dx = abs(n / 2 - j);
       gm[j][i] = (1.0 / (2.0 * PI * sq(sigma))) * exp( -(sq(dx) + sq(dy)) / (2 * sq(sigma)));
-      //printf("i = %d, j = %d, dx = %f, dy = %f, val = %f\n", i, j, dx, dy, gm[i][j]);
     }
   }
   return gm;
+}
+
+/* Returns filter response using filter gm for a Pixel in im with
+ * given row and col.
+ */
+Pixel * filterResponse(double sigma, const Image * im, int row, int col){
+  int n = 10 * sigma;
+  if((n % 2) == 0){//if n is even
+    n += 1;
+  }
+  //making a filter for each color channel
+  double ** filter_r = createGM(sigma);
+  double ** filter_g = createGM(sigma);
+  double ** filter_b = createGM(sigma);
+  //calculating initial sum of values in Gaussian matrix
+  double sum_gm = 0;
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      sum_gm += filter_r[i][j];
+    }
+  }
+  Pixel *output = malloc(sizeof(Pixel));
+  //setting pixel at given row/col at center of matrix and multiplying each matrix element by
+  //pixel value beneath it
+  for(int i = - n / 2; i < n / 2; i++){
+    for(int j = - n / 2; j < n/2; j++){
+      //if a Pixel exists below 
+      if((i >= -1) && (j >= 0) && (i < im->rows - 1) && (j < im->cols)){
+	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i) * im->cols + col + j].r;
+	filter_g[i + (n / 2)][j + (n / 2)] *= im->data[(row + i) * im->cols + col + j].g;
+	filter_b[i + (n / 2)][j + (n / 2)] *= im->data[(row + i) * im->cols + col + j].b;
+      }else{//if Pixel doesn't exist below, set to 0
+	filter_r[i + (n / 2)][j + (n / 2)] = 0;
+	filter_g[i + (n / 2)][j + (n / 2)] = 0;
+	filter_b[i + (n / 2)][j + (n / 2)] = 0;
+      }
+    }
+  }
+  //calculating sum of weighted Pixel values for each color channel
+  double sum_r = 0;
+  double sum_g = 0;
+  double sum_b = 0;
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      sum_r += filter_r[i][j];
+      sum_g += filter_g[i][j];
+      sum_b += filter_b[i][j];
+    }
+  }
+  //setting output Pixel's color channels to normalized sum of values in filter matrix
+  output->r = (unsigned char)sum_r / sum_gm;
+  output->g = (unsigned char)sum_g / sum_gm;
+  output->b = (unsigned char)sum_b / sum_gm;
+
+  //freeing each color channel filter
+  for(int i = 0; i < n; i++){
+    free(filter_r[i]);
+    free(filter_g[i]);
+    free(filter_b[i]);
+  }
+  free(filter_r);
+  free(filter_g);
+  free(filter_b);
+  return output;
 }

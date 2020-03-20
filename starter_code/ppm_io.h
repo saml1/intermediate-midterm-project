@@ -68,4 +68,9 @@ double sq(double p);
 
 /* Returns a 2D double Gaussian matrix with variance sigma. */
 double ** createGM(double sigma);
+
+/* Returns filter response using filter gm for a Pixel in im with
+ * given row and col.
+ */
+Pixel *filterResponse(double sigma, const Image * im, int row, int col);
 #endif
