@@ -404,13 +404,13 @@ double ** createGM(double sigma){
   //don't forget to free everything eventually when this method is called
   double ** gm = malloc(n * sizeof(double));
   for(int i = 0; i < n; i++){
-    gm[i] = malloc(10 * sigma * sizeof(double));
+    gm[i] = malloc(n * sizeof(double));
   }
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       double dy = abs(n / 2 - i);
       double dx = abs(n / 2 - j);
-      gm[j][i] = (1.0 / (2.0 * PI * sq(sigma))) * exp( -(sq(dx) + sq(dy)) / (2 * sq(sigma)));
+      gm[i][j] = (1.0 / (2.0 * PI * sq(sigma))) * exp( -(sq(dx) + sq(dy)) / (2 * sq(sigma)));
     }
   }
   return gm;
@@ -420,8 +420,9 @@ double ** createGM(double sigma){
  * given row and col.
  */
 Pixel* filterResponse(double sigma, const Image * im, int row, int col){
-  printf("In filter response, row %d col %d \n", row, col);
+  //printf("In filter response, row %d col %d \n", row, col);
   int n = 10 * sigma;
+  //printf("%d\n", n);
   if((n % 2) == 0){//if n is even
     n += 1;
   }
@@ -429,6 +430,7 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
   double ** filter_r = createGM(sigma);
   double ** filter_g = createGM(sigma);
   double ** filter_b = createGM(sigma);
+  double ** filter_temp = createGM(sigma);
   //calculating initial sum of values in Gaussian matrix
   double sum_gm = 0;
   for(int i = 0; i < n; i++){
@@ -441,20 +443,28 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
   //pixel value beneath it
   for(int i = - n / 2; i < n / 2 + 1; i++){
     for(int j = - n / 2; j < n/2 + 1; j++){
-      //if a Pixel exists below 
-      if((i + row >= -1) && (j + col >= 0) && (i+ row < im->rows - 1) && (j + col < im->cols)){
+      //if a Pixel exists below
+      //if(!((row < n/2) || (col < n/2) || (row >= im->rows -(n/2)) || (col >= im->cols - (n/2)))){
+      if((i + row >= 0) && (j + col >= 0) && (i+ row < im->rows - 1) && (j + col < im->cols)){
 	//printf("no skip, i=%d, j= %d\n", i, j);
-	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i + 1) * im->cols + col + j].r;
+	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].r;
 	//printf(" (pass)\n");
-	filter_g[i + (n / 2)][j + (n / 2)] *= im->data[(row + i + 1) * im->cols + col + j].g;
-	filter_b[i + (n / 2)][j + (n / 2)] *= im->data[(row + i + 1) * im->cols + col + j].b;
+	filter_g[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].g;
+	filter_b[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].b;
       }else{//if Pixel doesn't exist below, set to 0
 	//printf("skip, i=%d, j= %d\n", i, j);
 	filter_r[i + (n / 2)][j + (n / 2)] = 0;
 	filter_g[i + (n / 2)][j + (n / 2)] = 0;
 	filter_b[i + (n / 2)][j + (n / 2)] = 0;
+	sum_gm -= filter_temp[i + (n / 2)][j + (n / 2)];
       }
     }
+  }
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      //printf("%f ", filter_r[i][j]);
+    }
+    //printf("\n");
   }
   //calculating sum of weighted Pixel values for each color channel
   double sum_r = 0;
@@ -477,9 +487,11 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
     free(filter_r[i]);
     free(filter_g[i]);
     free(filter_b[i]);
+    free(filter_temp[i]);
   }
   free(filter_r);
   free(filter_g);
   free(filter_b);
+  free(filter_temp);
   return output;
 }
