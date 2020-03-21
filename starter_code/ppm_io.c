@@ -445,7 +445,7 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
     for(int j = - n / 2; j < n/2 + 1; j++){
       //if a Pixel exists below
       //if(!((row < n/2) || (col < n/2) || (row >= im->rows -(n/2)) || (col >= im->cols - (n/2)))){
-      if((i + row >= 0) && (j + col >= 0) && (i+ row < im->rows - 1) && (j + col < im->cols)){
+      if((i + row >= 0) && (j + col >= 0) && (i+ row < im->rows ) && (j + col < im->cols)){
 	//printf("no skip, i=%d, j= %d\n", i, j);
 	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].r;
 	//printf(" (pass)\n");
@@ -478,9 +478,9 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
     }
   }
   //setting output Pixel's color channels to normalized sum of values in filter matrix
-  output->r = (unsigned char)sum_r / sum_gm;
-  output->g = (unsigned char)sum_g / sum_gm;
-  output->b = (unsigned char)sum_b / sum_gm;
+  output->r = (unsigned char)(sum_r / sum_gm);
+  output->g = (unsigned char)(sum_g / sum_gm);
+  output->b = (unsigned char)(sum_b / sum_gm);
 
   //freeing each color channel filter
   for(int i = 0; i < n; i++){
