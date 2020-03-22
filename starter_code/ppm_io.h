@@ -9,7 +9,7 @@
 #define PPM_IO_H
 #include <math.h>
 #include <stdio.h>
-#define PI 3.1415926535
+//#define PI 3.14
 
 /* A struct to store a single RGB pixel, one byte per color channel.
  */
@@ -48,29 +48,29 @@ Image * read_ppm(FILE *fp);
 int write_ppm(FILE *fp, const Image *im);
 
 /* Takes Image * fp and returns a new Image * with modified exposure ev. */
-Image * exposure(const Image * orig, float ev);
+//Image * exposure(const Image * orig, float ev);
 
 /* Takes two Image *'s and returns a blended image of the two with
  * ratio alpha.
  */
-Image * blend(const Image * input1, const Image * input2, float alpha);
+//Image * blend(const Image * input1, const Image * input2, float alpha);
 
 /* Takes image and returns new Image * with a pointilism-like effect */
-Image * pointilism(const Image * im);
+//Image * pointilism(const Image * im);
 
 /* Returns blurred version of given Image.
  * When sigma is larger, the output will have a stronger blurred effect. 
  */
-Image* blur(const Image * im, double sigma);
+//Image* blur(const Image * im, double sigma);
 
 /* Returns the square of the given double. */
-double sq(double p);
+//double sq(double p);
 
 /* Returns a 2D double Gaussian matrix with variance sigma. */
-double ** createGM(double sigma);
+//double ** createGM(double sigma);
 
 /* Returns filter response using filter gm for a Pixel in im with
  * given row and col.
  */
-Pixel *filterResponse(double sigma, const Image * im, int row, int col);
+//Pixel* filterResponse(double sigma, const Image * im, int row, int col);
 #endif
