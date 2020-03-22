@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
+#include <string.h>
 
 /* Takes Image * fp and returns a new Image * with modified exposure ev. */
 Image * exposure(const Image * orig, float ev){
@@ -426,4 +427,56 @@ Image * zoom_in(Image * input1) {
 
 Image * zoom_out(Image * input1) {
   return input1;
+}
+
+int doOperation(char *argv[]){
+  FILE * inputF = fopen(argv[1], "rb");
+  Image * inputI = read_ppm(inputF);
+  FILE * outputF = fopen(argv[2], "wb");
+  Image * outputI = NULL;
+
+  if(strcmp(argv[3], "exposure") == 0){
+    double ev;
+    sscanf(argv[4], "%lf", &ev);
+    outputI = exposure(inputI,ev);
+  }
+  
+  if(strcmp(argv[3], "blend") == 0){
+    double alpha;
+    sscanf(argv[5], "%lf", &alpha);
+    FILE * inputF2 = fopen(argv[4], "rb");
+    Image * inputI2 = read_ppm(inputF2);
+    outputI = blend(inputI, inputI2, alpha);
+    fclose(inputF2);
+    free(inputI2->data);
+    free(inputI2);
+  }
+  
+  if(strcmp(argv[3], "pointilism") == 0){
+    outputI = pointilism(inputI);
+  }
+
+  if(strcmp(argv[3], "blur") == 0){
+    double sigma;
+    sscanf(argv[4], "%lf", &sigma);
+    outputI = blur(inputI, sigma);
+  }
+  
+  if(write_ppm(outputF, outputI) == -1){
+    printf("Error: unable to open specified output file for writing or writing output failed.\n");
+    fclose(inputF);
+    fclose(outputF);
+    free(inputI->data);
+    free(inputI);
+    free(outputI->data);
+    free(outputI);
+    return 7;
+  }
+  fclose(inputF);
+  fclose(outputF);
+  free(inputI->data);
+  free(inputI);
+  free(outputI->data);
+  free(outputI);
+  return 0;
 }

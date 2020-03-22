@@ -12,5 +12,5 @@ int main(int argc, char *argv[]) {
   if(error != 0){
     return error;
   }
-  return 0;
+  return doOperation(argv);
 }

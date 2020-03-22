@@ -72,8 +72,10 @@ Image * read_ppm(FILE *fp) {
 int write_ppm(FILE *fp, const Image *im) {
 
   // check that fp is not NULL
-  assert(fp); 
-
+  //assert(fp); 
+  if(fp == NULL){
+    return -1;
+  }
   // write PPM file header, in the following format
   // P6
   // cols rows
@@ -203,16 +205,16 @@ int error_report(int argc, char *argv[]){
       fclose(inputF);
       free(inputI->data);
       free(inputI);
-      return 6;
+      return 2;
     }
     Image * input2_i = read_ppm(input2_f);
     if(input2_i == NULL){
-      printf("Error: failed to read input file.  Must be properly-formatted PPM file.\n");
+      printf("Error: failed to read second file.  Must be properly-formatted PPM file.\n");
       fclose(inputF);
       free(inputI->data);
       free(inputI);
       fclose(input2_f);
-      return 6;
+      return 3;
     }
     fclose(input2_f);
     free(input2_i->data);
