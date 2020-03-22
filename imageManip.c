@@ -451,9 +451,21 @@ int doOperation(char *argv[]){
     free(inputI2->data);
     free(inputI2);
   }
+
+  if(strcmp(argv[3], "zoom_in") == 0){
+    outputI = inputI;
+  }
+
+  if(strcmp(argv[3], "zoom_out") == 0){
+    outputI = inputI;
+  }
   
   if(strcmp(argv[3], "pointilism") == 0){
     outputI = pointilism(inputI);
+  }
+
+  if(strcmp(argv[3], "swirl") == 0){
+    outputI = inputI;
   }
 
   if(strcmp(argv[3], "blur") == 0){
