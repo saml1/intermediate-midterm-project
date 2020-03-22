@@ -495,3 +495,11 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
   free(filter_temp);
   return output;
 }
+
+Image * zoom_in(Image * input1) {
+  
+}
+
+Image * zoom_out(Image * input1) {
+  
+}
