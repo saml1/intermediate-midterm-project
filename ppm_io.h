@@ -47,6 +47,7 @@ Image * read_ppm(FILE *fp);
  */
 int write_ppm(FILE *fp, const Image *im);
 
+int error_report(int argc, char *argv[]);
 /* Takes Image * fp and returns a new Image * with modified exposure ev. */
 //Image * exposure(const Image * orig, float ev);
 
