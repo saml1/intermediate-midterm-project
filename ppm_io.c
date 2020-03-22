@@ -18,15 +18,17 @@
 Image * read_ppm(FILE *fp) {
 
   // check that fp is not NULL
-  assert(fp);
+  //assert(fp);
   
   //check that file is PPM file
   char buf[3];
   for(int i = 0; i < 3; i++){
     buf[i] = getc(fp);
   }
-  assert(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]));
-
+  //assert(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]));
+  if(!(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]))){
+    return NULL;
+  }
   //ignoring comment line
   char c = getc(fp);
   if(c == '#'){
