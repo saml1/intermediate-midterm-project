@@ -37,4 +37,8 @@ double ** createGM(double sigma);
  * given row and col.
  */
 Pixel* filterResponse(double sigma, const Image * im, int row, int col);
+
+Image * zoom_in(Image * input1);
+
+Image * zoom_out(Image * input1);
 #endif
