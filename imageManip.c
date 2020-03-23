@@ -422,7 +422,46 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
 }
 
 Image * zoom_in(Image * input1) {
-  return input1;
+  //TODO: Create an input 2D array from input1 and also create a 2D output array that has double the rows and cols of input1
+  Image * input = malloc(sizeof(Image));
+  input->rows = input1->rows;
+  input->cols = input1->cols;
+  input->data = malloc(sizeof(Pixel) * input->rows * input->cols);
+  
+  Pixel ** output = malloc(sizeof(*output) * 2 * input1->rows); 
+
+  for (int i = 0; i < output->rows; i++) {
+    output[i] = malloc(input1->cols * 2 * sizeof(output[0]));
+  }
+  
+
+
+  //Variables to keep track of the current row and col for input image
+  int row = 0;
+  int col = 0;
+  //For loop only has to keep track of output image dimensions because its guaranteed to be double the input dimensions. Row and col interate once for every two iterations of output because of += 2 
+  for (int i = 0; i < output->rows; i += 2) {
+    for (int j = 0; j < output->cols; j += 2) {
+      output->data[i][j].r = input->data[row][col].r;
+      output->data[i][j].g = input->data[row][col].g;
+      output->data[i][j].b = input->data[row][col].b;
+
+      output->data[i+1][j+1].r = input->data[row][col].r;
+      output->data[i+1][j+1].g = input->data[row][col].g;
+      output->data[i+1][j+1].b = input->data[row][col].b;
+
+      output->data[i+1][j].r = input->data[row][col].r;
+      output->data[i+1][j].g = input->data[row][col].g;
+      output->data[i+1][j].b = input->data[row][col].b;
+
+      output->data[i][j+1].r = input->data[row][col].r;
+      output->data[i][j+1].g = input->data[row][col].g;
+      output->data[i][j+1].b = input->data[row][col].b;
+      col++;
+    }
+    row++;
+  }
+  return output;
 }
 
 Image * zoom_out(Image * input1) {
