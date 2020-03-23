@@ -439,7 +439,7 @@ int doOperation(char *argv[]){
   Image * inputI = read_ppm(inputF);
   FILE * outputF = fopen(argv[2], "wb");
   Image * outputI = NULL;
-
+  int skip = 0;
   if(strcmp(argv[3], "exposure") == 0){
     double ev;
     sscanf(argv[4], "%lf", &ev);
@@ -459,24 +459,29 @@ int doOperation(char *argv[]){
 
   if(strcmp(argv[3], "zoom_in") == 0){
     outputI = inputI;
+    skip = 1;
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
     outputI = inputI;
+    skip = 1;
   }
   
   if(strcmp(argv[3], "pointilism") == 0){
     outputI = pointilism(inputI);
+    skip = 1;
   }
 
   if(strcmp(argv[3], "swirl") == 0){
     outputI = inputI;
+    skip = 1;
   }
 
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    outputI = blur(inputI, sigma);
+    //outputI = blur(inputI, sigma);
+    outputI = inputI;
   }
   
   if(write_ppm(outputF, outputI) == -1){
@@ -489,11 +494,15 @@ int doOperation(char *argv[]){
     free(outputI);
     return 7;
   }
+  if(skip == 0){
+    free(outputI->data);
+    free(outputI);
+  }
   fclose(inputF);
   fclose(outputF);
   free(inputI->data);
   free(inputI);
-  free(outputI->data);
-  free(outputI);
+  //free(outputI->data);
+  //free(outputI);
   return 0;
 }
