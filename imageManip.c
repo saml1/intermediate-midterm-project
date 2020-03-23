@@ -247,7 +247,9 @@ Image * pointilism(const Image * im){
       pix2d[i][j]= im->data[(i * im->cols) + j];
     }
   }
-  for(int i = 0; i < numPix * 0.03; i++){
+  printf("numpix: %d\n", numPix);
+  for(int p = 0; p < numPix * 0.03; p++){
+    int count = 0;
     curx = rand() % im->cols;
     cury = rand() % im->rows;
     curr = rand() % 5 + 1;
@@ -257,14 +259,17 @@ Image * pointilism(const Image * im){
 	//if pixel exists
 	if((i >= 0) && (i < im->rows) && (j >= 0) && (j < im->cols)){
 	  //if pixel is within radius (using distance formula) set its color to center of circle
+	  
 	  if(sqrt(pow((i-cury), 2) + pow((j-curx),2)) < (double)curr){
 	    pix2d[i][j].r = pix2d[cury][curx].r;
 	    pix2d[i][j].g = pix2d[cury][curx].g;
 	    pix2d[i][j].b = pix2d[cury][curx].b;
+	    count += 1;
 	  }
 	}
       }
     }
+    printf("curx: %d, cury: %d, curr: %d, count: %d\n", curx, cury, curr, count);
 
   }
   //setting im->data to pix2d
@@ -473,7 +478,7 @@ int doOperation(char *argv[]){
   Image * inputI = read_ppm(inputF);
   FILE * outputF = fopen(argv[2], "wb");
   Image * outputI = NULL;
-
+  int skip = 0;
   if(strcmp(argv[3], "exposure") == 0){
     double ev;
     sscanf(argv[4], "%lf", &ev);
@@ -493,24 +498,29 @@ int doOperation(char *argv[]){
 
   if(strcmp(argv[3], "zoom_in") == 0){
     outputI = inputI;
+    skip = 1;
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
     outputI = inputI;
+    skip = 1;
   }
   
   if(strcmp(argv[3], "pointilism") == 0){
     outputI = pointilism(inputI);
+    skip = 1;
   }
 
   if(strcmp(argv[3], "swirl") == 0){
     outputI = inputI;
+    skip = 1;
   }
 
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    outputI = blur(inputI, sigma);
+    //outputI = blur(inputI, sigma);
+    outputI = inputI;
   }
   
   if(write_ppm(outputF, outputI) == -1){
@@ -523,11 +533,15 @@ int doOperation(char *argv[]){
     free(outputI);
     return 7;
   }
+  if(skip == 0){
+    free(outputI->data);
+    free(outputI);
+  }
   fclose(inputF);
   fclose(outputF);
   free(inputI->data);
   free(inputI);
-  free(outputI->data);
-  free(outputI);
+  //free(outputI->data);
+  //free(outputI);
   return 0;
 }
