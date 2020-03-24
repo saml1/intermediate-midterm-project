@@ -112,9 +112,11 @@ int error_report(int argc, char *argv[]){
     printf("Error: failed to read input file.  Must be properly-formatted PPM file.\n");
     return 3;
   }
-  int validOperation = 1;
-  if(strcmp(argv[3], "blur") == 0 || strcmp(argv[3], "swirl") == 0 || strcmp(argv[3], "pointilism") == 0 || strcmp(argv[3], "zoom_out") == 0 || strcmp(argv[3], "zoom_in") == 0 || strcmp(argv[3], "blend") == 0 || strcmp(argv[3], "exposure") == 0){
-    validOperation = 0;
+  int validOperation = 0;
+  if(argc < 4){
+    validOperation = 1;
+  }else if(strcmp(argv[3], "blur") == 0 || strcmp(argv[3], "swirl") == 0 || strcmp(argv[3], "pointilism") == 0 || strcmp(argv[3], "zoom_out") == 0 || strcmp(argv[3], "zoom_in") == 0 || strcmp(argv[3], "blend") == 0 || strcmp(argv[3], "exposure") == 0){
+    validOperation = 1;
   }
   if(validOperation != 0){
     printf("Error: must include valid operation name.\n");
