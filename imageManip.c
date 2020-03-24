@@ -433,31 +433,41 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
 
 Image * zoom_in(const Image * input1) {
   //Create an input 2D array from input1 and also create a 2D output array that has double the rows and cols of input1
-  Pixel ** input = malloc(sizeof(*input) * input1->rows);
-  for (int i = 0 ; i < input1->rows; i++) {
-    input[i] = malloc(input1->cols * sizeof(input[0]));
+  int irows = input1->rows;
+  int icols = input1->cols;
+  
+  Pixel ** input;
+  input = malloc(irows * sizeof(*input));
+  for (int i = 0 ; i < irows; i++) {
+    input[i] = malloc(icols * sizeof(input[0]));
   }
-
-  for (int i = 0; i < input1->rows; i++) {
-    for (int j = 0; j < input1->cols; j++) {
-      input[i][j] = input1->data[(i*input1->cols) + j];
-    }
-  }
-  for (int i = 0; i < input1->rows; i++) {
-    for (int j = 0; j < input1->cols; j++) {
+  
+  for (int i = 0; i < irows; i++) {
+    for (int j = 0; j < icols; j++) {
       input[i][j].r = 0;
       input[i][j].g = 0;
       input[i][j].b = 0;
+    }
+  }
+  
+  
+  for (int i = 0; i < irows; i++) {
+    for (int j = 0; j < icols; j++) {
+      input[i][j].r = input1->data[(i*(icols)) + j].r;
+      input[i][j].g = input1->data[(i*(icols)) + j].g;
+      input[i][j].b = input1->data[(i*(icols)) + j].b;
+      // input[i][j] = input1->data[(i*(icols)) + j];
     }
   }
 
   
 
   //Beginning of the output array creation
-  int orow = (input1->rows) * 2;
-  int ocol = (input1->cols) * 2;
+  int orow = (irows) * 2;
+  int ocol = (icols) * 2;
   
-  Pixel ** output = malloc(sizeof(*output) * orow); 
+  Pixel ** output;
+  output = malloc(sizeof(*output) * orow); 
 
   for (int i = 0; i < orow; i++) {
     output[i] = malloc(ocol * sizeof(output[0]));
@@ -470,12 +480,13 @@ Image * zoom_in(const Image * input1) {
       output[i][j].b = 0;
     }
   }
-
+  /*
 
   //Variables to keep track of the current row and col for input image
   int row = 0;
   int col = 0;
-  //For loop only has to keep track of output image dimensions because its guaranteed to be double the input dimensions. Row and col interate once for every two iterations of output because of += 2 
+  //For loop only has to keep track of output image dimensions because its guaranteed to be double the input dimensions. Row and col interate once for every two iterations of output because of += 2
+  
   for (int i = 0; i < orow; i += 2) {
     for (int j = 0; j < orow; j += 2) {
       //Create a 2 x 2 box of pixels that are the same in the new output array then skip every other row and column since output array is double that of the input array
@@ -498,15 +509,37 @@ Image * zoom_in(const Image * input1) {
     }
     row++;
   }
+  */
+  //Free Memory
+  for (int i = 0 ; i < irows; i++) {
+    free(input[i]);
+  }
+  free(input);
+
+
+
+
+  
   //Create return Image and convert output 2D array back to an Image
   Image * new = malloc(sizeof(Image));
+  new->data = (Pixel*)malloc(sizeof(Pixel) * (orow) * (ocol));
+  
   new->rows = orow;
   new->cols = ocol;
+  
   for(int i = 0; i < orow; i++) {
     for(int j = 0; j < ocol; j++) {
-      new->data[(i*ocol) +j] = output[i][j];
+      new->data[(i*ocol) + j] = output[i][j];
     }
   }
+
+  //Free output after new Image is created
+  for (int i = 0 ; i < orow; i++) {
+    free(output[i]);
+  }
+  free(output);
+  
+  
   return new;
 }
 
@@ -538,12 +571,12 @@ int doOperation(char *argv[]){
   }
 
   if(strcmp(argv[3], "zoom_in") == 0){
-    outputI = inputI;
+    outputI = zoom_in(inputI);
     skip = 1;
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
-    outputI = inputI;
+    outputI = zoom_out(inputI);
     skip = 1;
   }
   
