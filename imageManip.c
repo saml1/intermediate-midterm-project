@@ -432,10 +432,10 @@ Image * zoom_in(const Image * input1) {
   for (int i = 0 ; i < input1->rows; i++) {
     input[i] = malloc(input1->cols * sizeof(input[0]));
   }
-
+  
   for (int i = 0; i < input1->rows; i++) {
     for (int j = 0; j < input1->cols; j++) {
-      input[i][j] = input1->data[(i*input1->cols) + j];
+      input[i][j] = input1->data[(i*(input1->cols)) + j];
     }
   }
   for (int i = 0; i < input1->rows; i++) {
@@ -450,7 +450,8 @@ Image * zoom_in(const Image * input1) {
 
   //Beginning of the output array creation
   int orow = (input1->rows) * 2;
-  int ocol = (input1->col)s * 2;
+  int ocol = (input1->cols) * 2;
+  
   
   Pixel ** output = malloc(sizeof(*output) * orow); 
 
@@ -493,15 +494,34 @@ Image * zoom_in(const Image * input1) {
     }
     row++;
   }
+
+  //Free Memory
+  for (int i = 0 ; i < input1->rows; i++) {
+    free(input[i]);
+  }
+  free(input);
+
+
+
+
+  
   //Create return Image and convert output 2D array back to an Image
   Image * new = malloc(sizeof(Image));
   new->rows = orow;
   new->cols = ocol;
   for(int i = 0; i < orow; i++) {
     for(int j = 0; j < ocol; j++) {
-      new->data[(i*ocol) +j] = output[i][j];
+      new->data[(i*ocol) + j] = output[i][j];
     }
   }
+
+  //Free output after new Image is created
+  for (int i = 0 ; i < orow; i++) {
+    free(output[i]);
+  }
+  free(output);
+
+  
   return new;
 }
 
@@ -533,12 +553,12 @@ int doOperation(char *argv[]){
   }
 
   if(strcmp(argv[3], "zoom_in") == 0){
-    outputI = inputI;
+    outputI = zoom_in(inputI);
     skip = 1;
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
-    outputI = inputI;
+    outputI = zoom_out(inputI);
     skip = 1;
   }
   
