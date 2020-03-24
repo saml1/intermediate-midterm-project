@@ -269,7 +269,7 @@ Image * pointilism(const Image * im){
 	}
       }
     }
-    printf("curx: %d, cury: %d, curr: %d, count: %d\n", curx, cury, curr, count);
+    //printf("curx: %d, cury: %d, curr: %d, count: %d\n", curx, cury, curr, count);
 
   }
   //setting im->data to pix2d
@@ -557,6 +557,7 @@ int doOperation(char *argv[]){
     sscanf(argv[4], "%lf", &sigma);
     //outputI = blur(inputI, sigma);
     outputI = inputI;
+    skip = 1;
   }
   
   if(write_ppm(outputF, outputI) == -1){
