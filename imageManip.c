@@ -450,7 +450,7 @@ Image * zoom_in(const Image * input1) {
 
   //Beginning of the output array creation
   int orow = (input1->rows) * 2;
-  int ocol = (input1->col)s * 2;
+  int ocol = (input1->cols) * 2;
   
   Pixel ** output = malloc(sizeof(*output) * orow); 
 
