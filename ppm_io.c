@@ -30,6 +30,7 @@ Image * read_ppm(FILE *fp) {
   if(!(buf[0] == 'P' && buf[1] == '6' && isspace(buf[2]))){
     return NULL;
   }
+  
   //ignoring comment line
   char c = getc(fp);
   if(c == '#'){
@@ -43,7 +44,9 @@ Image * read_ppm(FILE *fp) {
   int w = 0;
   int h = 0;
   fscanf(fp, "%d %d", &w, &h);
-  
+  if(w < 0 || h < 0){
+    return NULL;
+  }
   //making sure maxval is 255
   int maxval = 0;
   fscanf(fp, "%d", &maxval);

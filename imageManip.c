@@ -236,7 +236,8 @@ Image * pointilism(const Image * im){
   Pixel ** pix2d;
   pix2d = malloc(im->rows * sizeof(*pix2d));
   for(int i = 0; i < im->rows; i++){
-    pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
+    pix2d[i] = malloc(im->cols * sizeof(Pixel));
+    //pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
   }
   //randomly picking 3% of pixels and applying pointilism effect
   int curx = 0;
@@ -244,10 +245,13 @@ Image * pointilism(const Image * im){
   int curr = 0;
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      pix2d[i][j]= im->data[(i * im->cols) + j];
+      //pix2d[i][j]= im->data[(i * im->cols) + j];
+      pix2d[i][j].r= im->data[(i * im->cols) + j].r;
+      pix2d[i][j].g= im->data[(i * im->cols) + j].g;
+      pix2d[i][j].b= im->data[(i * im->cols) + j].b;
     }
   }
-  printf("numpix: %d\n", numPix);
+  //printf("numpix: %d\n", numPix);
   for(int p = 0; p < numPix * 0.03; p++){
     int count = 0;
     curx = rand() % im->cols;
@@ -259,8 +263,9 @@ Image * pointilism(const Image * im){
 	//if pixel exists
 	if((i >= 0) && (i < im->rows) && (j >= 0) && (j < im->cols)){
 	  //if pixel is within radius (using distance formula) set its color to center of circle
-	  
-	  if(sqrt(pow((i-cury), 2) + pow((j-curx),2)) < (double)curr){
+
+	  if(pow((j - curx), 2) + pow((i - cury),2) <= pow(curr, 2)){
+	    //if(sqrt(pow((i-cury), 2) + pow((j-curx),2)) < (double)curr){
 	    pix2d[i][j].r = pix2d[cury][curx].r;
 	    pix2d[i][j].g = pix2d[cury][curx].g;
 	    pix2d[i][j].b = pix2d[cury][curx].b;
@@ -269,7 +274,7 @@ Image * pointilism(const Image * im){
 	}
       }
     }
-    printf("curx: %d, cury: %d, curr: %d, count: %d\n", curx, cury, curr, count);
+    //printf("curx: %d, cury: %d, curr: %d, count: %d\n", curx, cury, curr, count);
 
   }
   //setting im->data to pix2d
@@ -452,7 +457,6 @@ Image * zoom_in(const Image * input1) {
   int orow = (input1->rows) * 2;
   int ocol = (input1->cols) * 2;
   
-  
   Pixel ** output = malloc(sizeof(*output) * orow); 
 
   for (int i = 0; i < orow; i++) {
@@ -564,7 +568,7 @@ int doOperation(char *argv[]){
   
   if(strcmp(argv[3], "pointilism") == 0){
     outputI = pointilism(inputI);
-    skip = 1;
+    //skip = 1;
   }
 
   if(strcmp(argv[3], "swirl") == 0){
@@ -577,6 +581,7 @@ int doOperation(char *argv[]){
     sscanf(argv[4], "%lf", &sigma);
     //outputI = blur(inputI, sigma);
     outputI = inputI;
+    skip = 1;
   }
   
   if(write_ppm(outputF, outputI) == -1){

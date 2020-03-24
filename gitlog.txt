@@ -1,0 +1,225 @@
+commit d479b3166ebead353a9018d6e06af68d4fb0670f
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Tue Mar 24 10:28:19 2020 -0400
+
+    just fixed typo so code will compile
+
+commit 10aa8b929f11861074cc5adc533ea5a0bba0df8e
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Tue Mar 24 00:07:43 2020 -0400
+
+    Cleaned up errors on zoom_in
+
+commit 51208189011171c9929bdbc4a63606cd93c8246e
+Merge: 7382fe2 1813dbb
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Mon Mar 23 19:34:58 2020 -0400
+
+    Merge branch 'master' of https://bitbucket.org/midtermproject1basl/midtermproject
+    
+     the commit.
+
+commit 7382fe2ea264ed341baa4effc2d59e0bc069b318
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Mon Mar 23 19:34:28 2020 -0400
+
+    Coded most of zoom_in with errors, still fixing some technical issues and will test
+
+commit 1813dbb5d6b559f583e9eda7f91dcc41c9908f7e
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Mon Mar 23 19:33:15 2020 -0400
+
+    commented out blur in imageManip.c so gradescope tests will finish; also added skip thing
+
+commit b25aa5249d915b8265ed8a6ecdacc813462ba631
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Mon Mar 23 19:28:45 2020 -0400
+
+    commented out blur in imagemanip.c because it was stopping gradescope from testing other functions
+
+commit 36bfd75004518abfd08a39e700e73828ffa17c45
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 19:14:22 2020 -0400
+
+    made imageManip.c output the input file for operations that aren't finished
+
+commit 2371df661c4b86ddad5165da87eeb06ce3d77010
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 17:34:27 2020 -0400
+
+    wrote doOperation method in imageManip.c so project.c only calls 2 functions
+
+commit 897f88997199567efbb103aef1e811d04270b193
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 16:33:10 2020 -0400
+
+    put all error reporting into a method in ppm_io.c to clear up project.c
+
+commit 844aff3dc78335f4a294605d5b441eb34ed9c688
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 16:14:26 2020 -0400
+
+    wrote in error throws in project.c and removed assertrs from ppm_io.c
+
+commit 13b0e0476e982a494fcd84becea59b06ec457db2
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 12:59:46 2020 -0400
+
+    moved all important files to root of folder
+
+commit 1ab47d55c8235d1e9f4d2e57eae99ae4f6e2d293
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 11:51:29 2020 -0400
+
+    took out image manipulation functions from here
+
+commit 266b17ffd27dc4ab6d19d72ced3a17cd55806cf1
+Merge: f3a6710 b65fc98
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 11:45:56 2020 -0400
+
+    i accidentally diverged us
+
+commit f3a67101e03e437da866153820a4964fcd9de333
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 11:43:23 2020 -0400
+
+    put functions declarations/implementations in correct format
+
+commit cded332ddd7abc559ef610ee7e10592a147656f8
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 22 11:16:30 2020 -0400
+
+    didn't realize image mainpulation functions needed their own c/h files- just made imageManip.c and imageManip.h
+
+commit b65fc984c7d3871855318e29cd7fa92b7b509308
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Sat Mar 21 21:37:57 2020 -0400
+
+    Added structure for zoom in and out methods
+
+commit 665db0f20bff413b6d237a5bb807183cadf6644c
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 20 20:50:54 2020 -0400
+
+    there are still weird pixels for sigma = .5 but for all of the pixels that look normal, they are exactly correct
+
+commit 3104e45dfb792a07022d47f4d9b0e53fa0933a8e
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 20 20:26:34 2020 -0400
+
+    less buggy but still is really buggy when sigma = .5
+
+commit cdc6c9f17f71d7852871c6a452fcf1c7ec919f92
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 20 16:20:35 2020 -0400
+
+    blue works as long as sigma >= 1- fix!
+
+commit 2840251662e5bee771623a7bbe6a6eee31d02702
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 20 13:33:20 2020 -0400
+
+    wrote filterResponse method but causes segmentation fault with edge pixels; also started writing actual blur method
+
+commit ea3d64aaf4febc87f109b0c5a5ea3d4b38f6521c
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 19 17:06:03 2020 -0400
+
+    started working on blur- wrote sq and createGM method
+
+commit 1278f3030f6809501f53becba34094d908d616ad
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 19 14:13:47 2020 -0400
+
+    completed pointilism method (no bugsvalgrind errors afaik)
+
+commit 0bc792663cfae7880c5f0ae21c6a61c52c354e1c
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Wed Mar 18 16:27:44 2020 -0400
+
+    fixed client switching stacks warning by dynamically allocating 2d arrays
+
+commit bb0b814c38a4e40de6b41a0ad8705d0f75cea684
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Wed Mar 18 15:51:56 2020 -0400
+
+    fixed valgrind errors (forgot to initialize black pixels in bottom right)
+
+commit 1133f70e1f868e64a68dd8606703a7254723c524
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Wed Mar 18 15:14:52 2020 -0400
+
+    still valgrind errors but code is a little easier to read
+
+commit 90cf0d7f27d4233694a26fb3ca8062cbb6f98a02
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Wed Mar 18 13:47:53 2020 -0400
+
+    blend method works with different dimensions now but need to fix valgrind errors
+
+commit a15674d028e7c6bd03e0043f428da6785df44a45
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Wed Mar 18 12:58:18 2020 -0400
+
+    blends overlapping pixels- still need to do everything else for when dimensions don't match
+
+commit 126be4c73648e7bbab998ec3e68cd6b71d623fb8
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Tue Mar 17 16:22:36 2020 -0400
+
+    crashes when both of one imageis greater than the other and is glitchy when one dimension is bigger
+
+commit 2593a0a1b13e0bf61a46ec21dc1f912d29a119d5
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Tue Mar 17 15:44:47 2020 -0400
+
+    fixed blended- works when images have same dimensions. Need to check if it works with different dimensions
+
+commit 8dd7158af2bfec0c45529005aa66430e568fc11a
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Tue Mar 17 02:28:04 2020 -0400
+
+    Correctly added blend method to ppm_io.h. Blend method is UNTESTED as of this commit
+
+commit cd3541ead2a5f6bc81a16e824b510fb4119d826a
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Tue Mar 17 02:24:30 2020 -0400
+
+    Wrote Blend method
+
+commit da3497b94e3fc1037de65985bfb49f8c0c6624ed
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 15 17:56:04 2020 -0400
+
+    fixed bug with exposure
+
+commit 83e9d5093749d8a2bc5af7ec8b3c64019b6b4877
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 15 17:46:22 2020 -0400
+
+    wrote exposure function, works when EV = -1 but not when EV = 1- FIX
+
+commit 0b4b41302fdbafb2e4b4f4ea4e55f7bdf073212b
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 15 15:52:57 2020 -0400
+
+    fixed valgrind errors in read_ppm
+
+commit 24bbd8c6c728856edd68045d8378b913cf1e5014
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Sun Mar 15 14:47:29 2020 -0400
+
+    completed read_ppm function
+
+commit def0819f23260130fe8052b1a3c17125f9602ba3
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Fri Feb 28 13:03:10 2020 -0500
+
+    Created project.c and added main method with Developer names and JHEDs
+
+commit c0a14ec0a17fa34f4fcbb83fe01fa37d2972748b
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Fri Feb 28 12:44:00 2020 -0500
+
+    Added starter code folder
