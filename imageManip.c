@@ -548,7 +548,36 @@ Image * zoom_in(const Image * input1) {
 }
 
 Image * zoom_out(Image * input1) {
-  return input1;
+  Pixel ** input;
+  input = malloc(irows * sizeof(*input));
+  for (int i = 0 ; i < irows; i++) {
+    input[i] = malloc(icols * sizeof(input[0]));
+  }
+  
+  for (int i = 0; i < irows; i++) {
+    for (int j = 0; j < icols; j++) {
+      input[i][j].r = 0;
+      input[i][j].g = 0;
+      input[i][j].b = 0;
+    }
+  }
+  
+  
+  for (int i = 0; i < irows; i++) {
+    for (int j = 0; j < icols; j++) {
+      input[i][j].r = input1->data[(i*(icols)) + j].r;
+      input[i][j].g = input1->data[(i*(icols)) + j].g;
+      input[i][j].b = input1->data[(i*(icols)) + j].b;
+    }
+  }
+
+
+
+
+
+  
+  Image * new = malloc(sizeof(Image));
+  return new;
 }
 
 int doOperation(char *argv[]){
