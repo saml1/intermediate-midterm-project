@@ -480,7 +480,7 @@ Image * zoom_in(const Image * input1) {
       output[i][j].b = 0;
     }
   }
-  /*
+  
 
   //Variables to keep track of the current row and col for input image
   int row = 0;
@@ -488,12 +488,13 @@ Image * zoom_in(const Image * input1) {
   //For loop only has to keep track of output image dimensions because its guaranteed to be double the input dimensions. Row and col interate once for every two iterations of output because of += 2
   
   for (int i = 0; i < orow; i += 2) {
-    for (int j = 0; j < orow; j += 2) {
+    for (int j = 0; j < ocol; j += 2) {
       //Create a 2 x 2 box of pixels that are the same in the new output array then skip every other row and column since output array is double that of the input array
+      //printf("row %d, col %d\n", row, col);
       output[i][j].r = input[row][col].r;
       output[i][j].g = input[row][col].g;
       output[i][j].b = input[row][col].b;
-
+      
       output[i+1][j+1].r = input[row][col].r;
       output[i+1][j+1].g = input[row][col].g;
       output[i+1][j+1].b = input[row][col].b;
@@ -505,16 +506,14 @@ Image * zoom_in(const Image * input1) {
       output[i][j+1].r = input[row][col].r;
       output[i][j+1].g = input[row][col].g;
       output[i][j+1].b = input[row][col].b;
+      
       col++;
     }
+    col = 0;
     row++;
   }
-  */
+  
   //Free Memory
-  for (int i = 0 ; i < irows; i++) {
-    free(input[i]);
-  }
-  free(input);
 
 
 
@@ -538,6 +537,11 @@ Image * zoom_in(const Image * input1) {
     free(output[i]);
   }
   free(output);
+
+  for (int i = 0 ; i < irows; i++) {
+    free(input[i]);
+  }
+  free(input);
   
   
   return new;
