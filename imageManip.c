@@ -548,12 +548,13 @@ Image * zoom_in(const Image * input1) {
 }
 
 Image * zoom_out(Image * input1) {
+  //Declare 2D array
   Pixel ** input;
   input = malloc(irows * sizeof(*input));
   for (int i = 0 ; i < irows; i++) {
     input[i] = malloc(icols * sizeof(input[0]));
   }
-  
+  //Intialize 2D array
   for (int i = 0; i < irows; i++) {
     for (int j = 0; j < icols; j++) {
       input[i][j].r = 0;
@@ -561,8 +562,7 @@ Image * zoom_out(Image * input1) {
       input[i][j].b = 0;
     }
   }
-  
-  
+  //Read input image data into 2D array
   for (int i = 0; i < irows; i++) {
     for (int j = 0; j < icols; j++) {
       input[i][j].r = input1->data[(i*(icols)) + j].r;
