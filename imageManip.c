@@ -755,17 +755,14 @@ int doOperation(char *argv[]){
 
   if(strcmp(argv[3], "zoom_in") == 0){
     outputI = zoom_in(inputI);
-    //skip = 1;
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
     outputI = zoom_out(inputI);
-    //skip = 1;
   }
   
   if(strcmp(argv[3], "pointilism") == 0){
     outputI = pointilism(inputI);
-    //skip = 1;
   }
 
   if(strcmp(argv[3], "swirl") == 0){
@@ -776,13 +773,11 @@ int doOperation(char *argv[]){
     sscanf(argv[5], "%d", &centerY);
     sscanf(argv[6], "%d", &scale);
     outputI = swirl(inputI, centerX, centerY, scale);
-    //skip = 1;
   }
 
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    //outputI = blur(inputI, sigma);
     outputI = inputI;
     skip = 1;
   }
@@ -805,7 +800,5 @@ int doOperation(char *argv[]){
   fclose(outputF);
   free(inputI->data);
   free(inputI);
-  //free(outputI->data);
-  //free(outputI);
   return 0;
 }

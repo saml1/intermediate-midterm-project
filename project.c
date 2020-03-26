@@ -9,8 +9,16 @@
 
 int main(int argc, char *argv[]) {
   int error = error_report(argc, argv);
+  printf("%d\n", error);
   if(error != 0){
     return error;
   }
-  return doOperation(argv);
+  error = doOperation(argv);
+  if(error == 139){
+    printf("Error: unable to open specified output file for writing or writing \
+output failed.\n");
+    return 7;
+  } else{
+    return error;
+  }
 }
