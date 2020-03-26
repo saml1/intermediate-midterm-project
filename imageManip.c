@@ -449,8 +449,7 @@ Image * zoom_in(const Image * input1) {
       input[i][j].b = 0;
     }
   }
-  
-  
+    
   for (int i = 0; i < irows; i++) {
     for (int j = 0; j < icols; j++) {
       input[i][j].r = input1->data[(i*(icols)) + j].r;
@@ -459,8 +458,6 @@ Image * zoom_in(const Image * input1) {
       // input[i][j] = input1->data[(i*(icols)) + j];
     }
   }
-
-  
 
   //Beginning of the output array creation
   int orow = (irows) * 2;
@@ -472,6 +469,7 @@ Image * zoom_in(const Image * input1) {
   for (int i = 0; i < orow; i++) {
     output[i] = malloc(ocol * sizeof(output[0]));
   }
+  
   //Initialize entire array before beginning zoom in process
   for (int i = 0; i < orow; i++) {
     for (int j = 0; j < ocol; j++) {
@@ -481,7 +479,6 @@ Image * zoom_in(const Image * input1) {
     }
   }
   
-
   //Variables to keep track of the current row and col for input image
   int row = 0;
   int col = 0;
@@ -513,12 +510,6 @@ Image * zoom_in(const Image * input1) {
     row++;
   }
   
-  //Free Memory
-
-
-
-
-  
   //Create return Image and convert output 2D array back to an Image
   Image * new = malloc(sizeof(Image));
   new->data = (Pixel*)malloc(sizeof(Pixel) * (orow) * (ocol));
@@ -532,7 +523,7 @@ Image * zoom_in(const Image * input1) {
     }
   }
 
-  //Free output after new Image is created
+  //Free memory
   for (int i = 0 ; i < orow; i++) {
     free(output[i]);
   }
@@ -543,32 +534,29 @@ Image * zoom_in(const Image * input1) {
   }
   free(input);
   
-  
   return new;
 }
 
 Image * zoom_out(const Image * input1) {
-  //Declare 2D array
-
+  //Declare variables that are easy to remember
   int rows = input1->rows;
   int cols = input1->cols;
   int newrows = rows/2;
   int newcols = cols/2;
 
-  
-  
-  
+  //Declare input 2D array and output
   Pixel ** input;
   input = malloc(rows * sizeof(*input));
   Pixel ** output;
   output = malloc(newrows * sizeof(*output));
-  
   for (int i = 0 ; i < rows; i++) {
     input[i] = malloc(cols * sizeof(input[0]));
   }
+  
   for (int i = 0; i < newrows; i++) {
     output[i] = malloc(newcols * sizeof(output[0]));
   }
+  
   //Intialize 2D array
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -577,6 +565,7 @@ Image * zoom_out(const Image * input1) {
       input[i][j].b = 0;
     }
   }
+  
   for (int i = 0; i < newrows; i++) {
     for(int j = 0; j < newcols; j++) {
       output[i][j].r = 0;
@@ -585,10 +574,7 @@ Image * zoom_out(const Image * input1) {
     }
   }
 
-  
   //Read input image data into 2D array
-
-  
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       input[i][j].r = input1->data[(i*(cols)) + j].r;
@@ -597,33 +583,32 @@ Image * zoom_out(const Image * input1) {
     }
   }
   
-
-  
   int currentrow = 0;
   int currentcol = 0;
   for(int i = 0; i < rows; i += 2) {
     for(int j = 0; j < cols; j += 2) {
+      //Average the pixels in a box and set the average equal to the current position in the output array
       int r = (input[i][j].r + input[i+1][j].r + input[i+1][j+1].r + input[i][j+1].r)/4; 
       int g = (input[i][j].g + input[i+1][j].g + input[i+1][j+1].g + input[i][j+1].g)/4;     
       int b = (input[i][j].b + input[i+1][j].b + input[i+1][j+1].b + input[i][j+1].b)/4;
+      
       output[currentrow][currentcol].r = r;
       output[currentrow][currentcol].g = g;
       output[currentrow][currentcol].b = b;
+      
       currentcol++;
     }
     currentcol = 0;
     currentrow++;
   }
   
-
-
-  
+  //Allocate memory for new iamge to return
   Image * new = malloc(sizeof(Image));
   new->data = (Pixel*)malloc(sizeof(Pixel) * (newrows) * (newcols));
   new->rows = newrows;
   new->cols = newcols;
 
-  
+  //Convert output array to Image
   for (int i = 0; i < newrows; i++) {
     for (int j = 0; j < newcols; j++) {
       new->data[(i*(newcols)) + j].r = output[i][j].r;
@@ -632,7 +617,7 @@ Image * zoom_out(const Image * input1) {
     }
   }
   
-
+  //Free memory
   for(int i = 0; i < newrows; i++) {
     free(output[i]);
   }
@@ -648,7 +633,7 @@ Image * zoom_out(const Image * input1) {
 
 
 Image * swirl(const Image * input1, const int centerX, const int centerY, const int scale) {
-
+  //Declare some variables with easy names to remember
   int rows = input1->rows;
   int cols = input1->cols;
   int newrows = rows;
@@ -656,7 +641,7 @@ Image * swirl(const Image * input1, const int centerX, const int centerY, const 
 
   
   
-  
+  //Declare original 2D arrays
   Pixel ** input;
   input = malloc(rows * sizeof(*input));
   Pixel ** output;
@@ -686,8 +671,6 @@ Image * swirl(const Image * input1, const int centerX, const int centerY, const 
 
   
   //Read input image data into 2D array
-
-  
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       input[i][j].r = input1->data[(i*(cols)) + j].r;
@@ -695,34 +678,41 @@ Image * swirl(const Image * input1, const int centerX, const int centerY, const 
       input[i][j].b = input1->data[(i*(cols)) + j].b;
     }
   }
+
+  //Loop through all coordinates of input image
   for (int i = 0; i < rows; i++) {
     for(int j = 0; j < cols; j++) {
+      //Main Algorithm X and Y to simplify equations
       int X = j;
       int Y = i;
+      
+      //Alpha declared to simplify pixel calculations
       double alpha = (sqrt(sq(X - centerX) + sq(Y - centerY) ) ) / (scale);
       
+      //New X and Y declared and calculated
       int newX = (X - centerX) * cos(alpha) - (Y - centerY) * sin(alpha) + centerX;
       int newY = (X - centerX) * sin(alpha) + (Y - centerY) * cos(alpha) + centerY;
-      //printf("X %d Y %d\n", newX, newY);
+      
+      //Verifies that newX and newY are valid coordinates
       if(newX >= 0 && newX < cols && newY >= 0 && newY < rows) {
 	output[i][j] = input[newY][newX];
       }
     }
   }
 
-
-
+  //Declare and allocate memory for new image
   Image * new = malloc(sizeof(Image));
   new->data = (Pixel*)malloc(sizeof(Pixel) * newrows * newcols);
   new->rows = newrows;
   new->cols = newcols;
-
+  
+  //Convert output array to a 1D array for image
   for(int i = 0; i < newrows; i++) {
     for(int j = 0; j < newcols; j++) {
       new->data[(i*newcols) + j] = output[i][j];
     }
   }
-
+  //Free allocated memory
   for (int i = 0; i < newrows; i++) {
     free(output[i]);
   }
@@ -732,12 +722,9 @@ Image * swirl(const Image * input1, const int centerX, const int centerY, const 
     free(input[i]);
   }
   free(input);
-
+  
+  //Return the new image
   return new;
-  
-  
-
-  
 }
 
 
