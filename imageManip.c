@@ -305,9 +305,10 @@ Image* blur(const Image * im, double sigma){
   for(int i = 0; i < im->rows; i++){                                                               
     pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
   }
+  double ** gm = createGM(sigma);
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      Pixel * temp = filterResponse(sigma, im, i, j);
+      Pixel * temp = filterResponse(gm, sigma, im, i, j);
       pix2d[i][j] = *temp;
       free(temp);
     }
@@ -322,6 +323,15 @@ Image* blur(const Image * im, double sigma){
     free(pix2d[i]);
   }
   free(pix2d);
+
+  int n = 10 * sigma;
+  if((n % 2) == 0){
+    n += 1;
+  }
+  for(int i = 0; i < n; i++){
+    free(gm[i]);
+  }
+  free(gm);
   return new;
 }
 
@@ -354,23 +364,33 @@ double ** createGM(double sigma){
 /* Returns filter response using filter gm for a Pixel in im with
  * given row and col.
  */
-Pixel* filterResponse(double sigma, const Image * im, int row, int col){
-  //printf("In filter response, row %d col %d \n", row, col);
+Pixel* filterResponse(double ** gm, double sigma, const Image * im, int row, int col){
+  //making a filter for each color channel
   int n = 10 * sigma;
-  //printf("%d\n", n);
-  if((n % 2) == 0){//if n is even
+  if((n % 2) == 0){//if n is even                                                                           
     n += 1;
   }
-  //making a filter for each color channel
-  double ** filter_r = createGM(sigma);
-  double ** filter_g = createGM(sigma);
-  double ** filter_b = createGM(sigma);
-  double ** filter_temp = createGM(sigma);
+  double ** filter_r = malloc(n * sizeof(double));
+  double ** filter_g = malloc(n * sizeof(double));
+  double ** filter_b = malloc(n * sizeof(double));
+  for(int i = 0; i < n; i++){
+    filter_r[i] = malloc(n * sizeof(double));
+    filter_g[i]	= malloc(n * sizeof(double));
+    filter_b[i]	= malloc(n * sizeof(double));
+  }
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      filter_r[i][j] = gm[i][j];
+      filter_g[i][j] = gm[i][j];
+      filter_b[i][j] = gm[i][j];
+    }
+  }
+  //double ** filter_temp = gm;
   //calculating initial sum of values in Gaussian matrix
   double sum_gm = 0;
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
-      sum_gm += filter_r[i][j];
+      sum_gm += gm[i][j];
     }
   }
   Pixel *output = malloc(sizeof(Pixel));
@@ -391,7 +411,7 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
 	filter_r[i + (n / 2)][j + (n / 2)] = 0;
 	filter_g[i + (n / 2)][j + (n / 2)] = 0;
 	filter_b[i + (n / 2)][j + (n / 2)] = 0;
-	sum_gm -= filter_temp[i + (n / 2)][j + (n / 2)];
+	sum_gm -= gm[i + (n / 2)][j + (n / 2)];
       }
     }
   }
@@ -422,12 +442,12 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col){
     free(filter_r[i]);
     free(filter_g[i]);
     free(filter_b[i]);
-    free(filter_temp[i]);
+    //free(filter_temp[i]);
   }
   free(filter_r);
   free(filter_g);
   free(filter_b);
-  free(filter_temp);
+  //free(filter_temp);
   return output;
 }
 

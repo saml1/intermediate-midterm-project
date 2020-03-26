@@ -36,7 +36,7 @@ double ** createGM(double sigma);
 /* Returns filter response using filter gm for a Pixel in im with 
  * given row and col.
  */
-Pixel* filterResponse(double sigma, const Image * im, int row, int col);
+Pixel* filterResponse(double ** gm, double sigma, const Image * im, int row, int col);
 
 
 //Takes an input image and returns a zoomed in version of it
