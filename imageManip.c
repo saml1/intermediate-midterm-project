@@ -619,7 +619,7 @@ Image * zoom_out(Image * input1) {
 
   
   Image * new = malloc(sizeof(Image));
-  new->data = (Pixel*)malloc(sizeof(Pixel) * newrows * newcols);
+  new->data = (Pixel*)malloc(sizeof(Pixel) * (newrows) * (newcols));
   new->rows = newrows;
   new->cols = newcols;
 
@@ -676,7 +676,7 @@ int doOperation(char *argv[]){
 
   if(strcmp(argv[3], "zoom_out") == 0){
     outputI = zoom_out(inputI);
-    skip = 1;
+    //skip = 1;
   }
   
   if(strcmp(argv[3], "pointilism") == 0){
