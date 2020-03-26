@@ -646,6 +646,14 @@ Image * zoom_out(const Image * input1) {
   return new;
 }
 
+
+Image * swirl(const Image * input1) {
+  
+}
+
+
+
+
 int doOperation(char *argv[]){
   FILE * inputF = fopen(argv[1], "rb");
   Image * inputI = read_ppm(inputF);

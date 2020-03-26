@@ -45,5 +45,8 @@ Image * zoom_in(const Image * input1);
 //Takes an input image and returns a zoomed out version of it
 Image * zoom_out(const Image * input1);
 
+//takes an input image and returns a swirled version of it
+Image * swirl(const Image * input1);
+
 int doOperation(char *argv[]);
 #endif
