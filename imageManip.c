@@ -713,7 +713,16 @@ Image * swirl(const Image * input1, const int centerX, const int centerY, const 
       new->data[(i*newcols) + j] = output[i][j];
     }
   }
-  
+
+  for (int i = 0; i < newrows; i++) {
+    free(output[i]);
+  }
+  free(output);
+
+  for(int i = 0; i < rows; i++) {
+    free(input[i]);
+  }
+  free(input);
 
   return new;
   
@@ -764,10 +773,12 @@ int doOperation(char *argv[]){
   }
 
   if(strcmp(argv[3], "swirl") == 0){
-    int center = 0;
+    int centerX = 0;
+    int centerY = 0;
     int scale = 0;
-    sscanf(argv[4], "%d", &center);
-    sscanf(argv[5], "%d", &scale);
+    sscanf(argv[4], "%d", &centerX);
+    sscanf(argv[5], "%d", &centerY);
+    sscanf(argv[6], "%d", &scale);
     outputI = swirl(inputI, center, scale);
     //skip = 1;
   }
