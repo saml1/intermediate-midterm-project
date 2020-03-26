@@ -549,25 +549,64 @@ Image * zoom_in(const Image * input1) {
 
 Image * zoom_out(Image * input1) {
   //Declare 2D array
+
+  int rows = input1->rows;
+  int cols = input1->cols;
+  int newrows = rows/2;
+  int newcols = cols/2;
+
+  
+  
+  
   Pixel ** input;
-  input = malloc(irows * sizeof(*input));
-  for (int i = 0 ; i < irows; i++) {
-    input[i] = malloc(icols * sizeof(input[0]));
+  input = malloc(rows * sizeof(*input));
+  Pixel ** output;
+  output = malloc(newrows * sizeof(*output));
+  
+  for (int i = 0 ; i < rows; i++) {
+    input[i] = malloc(cols * sizeof(input[0]));
+  }
+  for (int i = 0; i < newrows; i++) {
+    output[i] = malloc(newcols * sizeof(output[0]));
   }
   //Intialize 2D array
-  for (int i = 0; i < irows; i++) {
-    for (int j = 0; j < icols; j++) {
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
       input[i][j].r = 0;
       input[i][j].g = 0;
       input[i][j].b = 0;
     }
   }
+  for (int i = 0; i < newrows; i++) {
+    for(int j = 0; j < newcols; j++) {
+      output[i][j].r = 0;
+      output[i][j].g = 0;
+      output[i][j].b = 0;
+    }
+  }
   //Read input image data into 2D array
-  for (int i = 0; i < irows; i++) {
-    for (int j = 0; j < icols; j++) {
-      input[i][j].r = input1->data[(i*(icols)) + j].r;
-      input[i][j].g = input1->data[(i*(icols)) + j].g;
-      input[i][j].b = input1->data[(i*(icols)) + j].b;
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      input[i][j].r = input1->data[(i*(cols)) + j].r;
+      input[i][j].g = input1->data[(i*(cols)) + j].g;
+      input[i][j].b = input1->data[(i*(cols)) + j].b;
+    }
+  }
+
+
+
+
+  
+
+
+  
+  for(int i = 0; i < rows; i += 2) {
+    for(int j = 0; j < cols; j += 2) {
+      int r = (input[i][j].r + input[i+1][j].r + input[i+1][j+1].r + input[i][j+1].r)/4; 
+      int g = (input[i][j].g + input[i+1][j].g + input[i+1][j+1].g + input[i][j+1].g)/4;     
+      int b = (input[i][j].b + input[i+1][j].b + input[i+1][j+1].b + input[i][j+1].b)/4;
+      
+      
     }
   }
 
@@ -577,6 +616,22 @@ Image * zoom_out(Image * input1) {
 
   
   Image * new = malloc(sizeof(Image));
+  new->data = (Pixel*)malloc(sizeof(Pixel) * newrows * newcols);
+  new->rows = newrows;
+  new->cols = newcols;
+
+
+
+  for(int i = 0; i < newrows; i++) {
+    free(output[i]);
+  }
+  free(output);
+
+  for (int i = 0; i < rows; i++) {
+    free(input[i]);
+  }
+  free(input);
+  
   return new;
 }
 
