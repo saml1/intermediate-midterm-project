@@ -592,25 +592,21 @@ Image * zoom_out(Image * input1) {
       input[i][j].b = input1->data[(i*(cols)) + j].b;
     }
   }
-
-
-
-
-  
-
-
-  
+  int currentrow = 0;
+  int currentcol = 0;
   for(int i = 0; i < rows; i += 2) {
     for(int j = 0; j < cols; j += 2) {
       int r = (input[i][j].r + input[i+1][j].r + input[i+1][j+1].r + input[i][j+1].r)/4; 
       int g = (input[i][j].g + input[i+1][j].g + input[i+1][j+1].g + input[i][j+1].g)/4;     
       int b = (input[i][j].b + input[i+1][j].b + input[i+1][j+1].b + input[i][j+1].b)/4;
-      
-      
+      output[currentrow][currentcols].r = r;
+      output[currentrow][currentcols].g = g;
+      output[currentrow][currentcols].b = b;
+      currentcol++;
     }
+    currentcol = 0;
+    currentrow++;
   }
-
-
 
 
 
@@ -621,6 +617,13 @@ Image * zoom_out(Image * input1) {
   new->cols = newcols;
 
 
+  for (int i = 0; i < newrows; i++) {
+    for (int j = 0; j < newcols; j++) {
+      input1->data[(i*(newcols)) + j].r = output[i][j].r;
+      input1->data[(i*(newcols)) + j].g = output[i][j].g;
+      input1->data[(i*(newcols)) + j].b = output[i][j].b;
+    }
+  }
 
   for(int i = 0; i < newrows; i++) {
     free(output[i]);
