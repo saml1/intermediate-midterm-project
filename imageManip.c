@@ -647,7 +647,78 @@ Image * zoom_out(const Image * input1) {
 }
 
 
-Image * swirl(const Image * input1) {
+Image * swirl(const Image * input1, const int center, const int scale) {
+
+  int rows = input1->rows;
+  int cols = input1->cols;
+  int newrows = rows;
+  int newcols = cols;
+
+  
+  
+  
+  Pixel ** input;
+  input = malloc(rows * sizeof(*input));
+  Pixel ** output;
+  output = malloc(newrows * sizeof(*output));
+  
+  for (int i = 0 ; i < rows; i++) {
+    input[i] = malloc(cols * sizeof(input[0]));
+  }
+  for (int i = 0; i < newrows; i++) {
+    output[i] = malloc(newcols * sizeof(output[0]));
+  }
+  //Intialize 2D array
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      input[i][j].r = 0;
+      input[i][j].g = 255;
+      input[i][j].b = 0;
+    }
+  }
+  for (int i = 0; i < newrows; i++) {
+    for(int j = 0; j < newcols; j++) {
+      output[i][j].r = 0;
+      output[i][j].g = 0;
+      output[i][j].b = 0;
+    }
+  }
+
+  
+  //Read input image data into 2D array
+
+  
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      input[i][j].r = input1->data[(i*(cols)) + j].r;
+      input[i][j].g = input1->data[(i*(cols)) + j].g;
+      input[i][j].b = input1->data[(i*(cols)) + j].b;
+    }
+  }
+  for (int i = 0; i < rows; i++) {
+    for(int j = 0; j < cols; j++) {
+      output[i][j].r = input[i][j].r;
+    }
+  }
+
+
+
+  Image * new = malloc(sizeof(Image));
+  new->data = (Pixel*)malloc(sizeof(Pixel) * newrows * newcols);
+  new->rows = newrows;
+  new->cols = newcols;
+
+  for(int i = 0; i < newrows; i++) {
+    for(int j = 0; j < newcols; j++) {
+      new->data[(i*newcols) + j] = output[i][j];
+    }
+  }
+  
+
+  return new;
+  
+  
+
   
 }
 
@@ -693,8 +764,12 @@ int doOperation(char *argv[]){
   }
 
   if(strcmp(argv[3], "swirl") == 0){
-    outputI = inputI;
-    skip = 1;
+    int center = 0;
+    int scale = 0;
+    sscanf(argv[4], "%d", &center);
+    sscanf(argv[5], %d, &scale);
+    outputI = swirl(inputI, center, scale);
+    //skip = 1;
   }
 
   if(strcmp(argv[3], "blur") == 0){
