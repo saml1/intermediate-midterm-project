@@ -599,9 +599,9 @@ Image * zoom_out(Image * input1) {
       int r = (input[i][j].r + input[i+1][j].r + input[i+1][j+1].r + input[i][j+1].r)/4; 
       int g = (input[i][j].g + input[i+1][j].g + input[i+1][j+1].g + input[i][j+1].g)/4;     
       int b = (input[i][j].b + input[i+1][j].b + input[i+1][j+1].b + input[i][j+1].b)/4;
-      output[currentrow][currentcols].r = r;
-      output[currentrow][currentcols].g = g;
-      output[currentrow][currentcols].b = b;
+      output[currentrow][currentcol].r = r;
+      output[currentrow][currentcol].g = g;
+      output[currentrow][currentcol].b = b;
       currentcol++;
     }
     currentcol = 0;
