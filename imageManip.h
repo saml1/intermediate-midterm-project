@@ -43,7 +43,7 @@ Pixel* filterResponse(double sigma, const Image * im, int row, int col);
 Image * zoom_in(const Image * input1);
 
 //Takes an input image and returns a zoomed out version of it
-Image * zoom_out(Image * input1);
+Image * zoom_out(const Image * input1);
 
 int doOperation(char *argv[]);
 #endif

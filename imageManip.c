@@ -547,7 +547,7 @@ Image * zoom_in(const Image * input1) {
   return new;
 }
 
-Image * zoom_out(Image * input1) {
+Image * zoom_out(const Image * input1) {
   //Declare 2D array
 
   int rows = input1->rows;
