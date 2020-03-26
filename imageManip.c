@@ -608,6 +608,8 @@ Image * zoom_out(const Image * input1) {
   for(int i = 0; i < rows; i += 2) {
     for(int j = 0; j < cols; j += 2) {
       //Average the pixels in a box and set the average equal to the current position in the output array
+      
+
       int r = (input[i][j].r + input[i+1][j].r + input[i+1][j+1].r + input[i][j+1].r)/4; 
       int g = (input[i][j].g + input[i+1][j].g + input[i+1][j+1].g + input[i][j+1].g)/4;     
       int b = (input[i][j].b + input[i+1][j].b + input[i+1][j+1].b + input[i][j+1].b)/4;
@@ -778,10 +780,6 @@ int doOperation(char *argv[]){
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
-    if(inputI->rows < 2 || inputI->cols < 2) {
-      printf("Specified output file could not be opened for writing, or writing output somehow fails\n");
-      return 7;
-    }
     outputI = zoom_out(inputI);
   }
   
