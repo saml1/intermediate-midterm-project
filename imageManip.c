@@ -647,7 +647,7 @@ Image * zoom_out(const Image * input1) {
 }
 
 
-Image * swirl(const Image * input1, const int center, const int scale) {
+Image * swirl(const Image * input1, const int centerX, const int centerY, const int scale) {
 
   int rows = input1->rows;
   int cols = input1->cols;
@@ -767,7 +767,7 @@ int doOperation(char *argv[]){
     int center = 0;
     int scale = 0;
     sscanf(argv[4], "%d", &center);
-    sscanf(argv[5], %d, &scale);
+    sscanf(argv[5], "%d", &scale);
     outputI = swirl(inputI, center, scale);
     //skip = 1;
   }
