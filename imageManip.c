@@ -778,6 +778,10 @@ int doOperation(char *argv[]){
   }
 
   if(strcmp(argv[3], "zoom_out") == 0){
+    if(inputI->rows < 2 || inputI->cols < 2) {
+      printf("Specified output file could not be opened for writing, or writing output somehow fails\n");
+      return 7;
+    }
     outputI = zoom_out(inputI);
   }
   
@@ -798,9 +802,9 @@ int doOperation(char *argv[]){
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    //outputI = inputI;
-    outputI = blur(inputI, sigma);
-    //skip = 1;
+    outputI = inputI;
+    // outputI = blur(inputI, sigma);
+    skip = 1;
   }
   
   if(write_ppm(outputF, outputI) == -1){
