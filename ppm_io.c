@@ -76,7 +76,7 @@ int write_ppm(FILE *fp, const Image *im) {
 
   // check that fp is not NULL
   //assert(fp); 
-  if(fp == NULL){
+  if(fp == NULL || im == NULL){
     return -1;
   }
   // write PPM file header, in the following format
