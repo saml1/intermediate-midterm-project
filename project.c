@@ -9,14 +9,17 @@
 
 int main(int argc, char *argv[]) {
   int error = error_report(argc, argv);
-  printf("%d\n", error);
+  //printf("%d\n", error);
+  if(error == 139){
+    printf("Error: unable to open specified output file for writing or writing output failed.\n");
+    return 7;
+  }
   if(error != 0){
     return error;
   }
   error = doOperation(argv);
   if(error == 139){
-    printf("Error: unable to open specified output file for writing or writing \
-output failed.\n");
+    printf("Error: unable to open specified output file for writing or writing output failed.\n");
     return 7;
   } else{
     return error;
