@@ -778,8 +778,9 @@ int doOperation(char *argv[]){
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    outputI = inputI;
-    skip = 1;
+    //outputI = inputI;
+    outputI = blur(inputI, sigma);
+    //skip = 1;
   }
   
   if(write_ppm(outputF, outputI) == -1){
