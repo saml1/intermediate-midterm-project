@@ -573,7 +573,7 @@ Image * zoom_out(Image * input1) {
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       input[i][j].r = 0;
-      input[i][j].g = 0;
+      input[i][j].g = 255;
       input[i][j].b = 0;
     }
   }
@@ -584,7 +584,11 @@ Image * zoom_out(Image * input1) {
       output[i][j].b = 0;
     }
   }
+
+  
   //Read input image data into 2D array
+
+  
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       input[i][j].r = input1->data[(i*(cols)) + j].r;
@@ -592,6 +596,9 @@ Image * zoom_out(Image * input1) {
       input[i][j].b = input1->data[(i*(cols)) + j].b;
     }
   }
+  
+
+  
   int currentrow = 0;
   int currentcol = 0;
   for(int i = 0; i < rows; i += 2) {
@@ -607,7 +614,7 @@ Image * zoom_out(Image * input1) {
     currentcol = 0;
     currentrow++;
   }
-
+  
 
 
   
@@ -616,20 +623,21 @@ Image * zoom_out(Image * input1) {
   new->rows = newrows;
   new->cols = newcols;
 
-
+  
   for (int i = 0; i < newrows; i++) {
     for (int j = 0; j < newcols; j++) {
-      input1->data[(i*(newcols)) + j].r = output[i][j].r;
-      input1->data[(i*(newcols)) + j].g = output[i][j].g;
-      input1->data[(i*(newcols)) + j].b = output[i][j].b;
+      new->data[(i*(newcols)) + j].r = output[i][j].r;
+      new->data[(i*(newcols)) + j].g = output[i][j].g;
+      new->data[(i*(newcols)) + j].b = output[i][j].b;
     }
   }
+  
 
   for(int i = 0; i < newrows; i++) {
     free(output[i]);
   }
   free(output);
-
+  
   for (int i = 0; i < rows; i++) {
     free(input[i]);
   }
