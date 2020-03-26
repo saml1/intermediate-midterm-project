@@ -697,12 +697,15 @@ Image * swirl(const Image * input1, const int centerX, const int centerY, const 
   }
   for (int i = 0; i < rows; i++) {
     for(int j = 0; j < cols; j++) {
-      double alpha = (sqrt(sq(i - centerX) + sq(j - centerY))) / scale;
-      int newX = (i - centerX) * cos(alpha) - (j - centerY) * sin(alpha) + centerX;
-      int newY = (i - centerX) * sin(alpha) + (j - centerY) * cos(alpha) + centerY;
+      int X = j;
+      int Y = i;
+      double alpha = (sqrt(sq(X - centerX) + sq(Y - centerY) ) ) / (scale);
+      
+      int newX = (X - centerX) * cos(alpha) - (Y - centerY) * sin(alpha) + centerX;
+      int newY = (X - centerX) * sin(alpha) + (Y - centerY) * cos(alpha) + centerY;
       //printf("X %d Y %d\n", newX, newY);
-      if(newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
-	output[newX][newY] = input[i][j];
+      if(newX >= 0 && newX < cols && newY >= 0 && newY < rows) {
+	output[i][j] = input[newY][newX];
       }
     }
   }
