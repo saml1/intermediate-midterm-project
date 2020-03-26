@@ -1,3 +1,15 @@
+commit 938dfaad98d9fcba5f17f1a0d53f3480ae2c3c27
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 12:49:46 2020 -0400
+
+    deleted commented out code and hopefully fixed error 7 bug
+
+commit fb3dbc6e9e0f4aef295ca4f3948526e5576efce2
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Thu Mar 26 03:49:00 2020 -0400
+
+    Reverted a few changes to align with gradescope
+
 commit d0847802947f8296929197a0a7894ae2698a8349
 Author: Brayden Archer <barcher9@jh.edu>
 Date:   Thu Mar 26 03:12:16 2020 -0400
