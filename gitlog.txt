@@ -1,3 +1,45 @@
+commit 2f9de236e7ab8a496103465aa294d3bfc136f8b6
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Thu Mar 26 17:47:59 2020 -0400
+
+    Reverted possible error 7 fixes in gradescope, still troubleshooting
+
+commit de5111160575547974dafd51cdb90ae5a646b15d
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Thu Mar 26 17:25:55 2020 -0400
+
+    Recommented out blur function to make gradescope tests run faster while troubleshooting for error 7
+
+commit 7943b2283ce9f199f0a58c922608b78f74f5b98e
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 16:07:00 2020 -0400
+
+    made blur more efficient so hopefully gradescope will be ok with it
+
+commit 6cb43a4c6ea60a022f1eeca17b1bbfd69717d2e4
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 14:23:17 2020 -0400
+
+    updated README
+
+commit 908b5eef6088ee307062b34eff784aef1a9045b1
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 13:49:17 2020 -0400
+
+    uncommented out blur in doOperation (gradescope will give error)
+
+commit 5f92de03378d040022c5a46980ff2050d2c8ee6a
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 13:07:16 2020 -0400
+
+    maybe passed error 7 gradescope test?
+
+commit bc967d2a1b479509aa6ba76487af03361131a26b
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 12:52:29 2020 -0400
+
+    updated git log
+
 commit 938dfaad98d9fcba5f17f1a0d53f3480ae2c3c27
 Author: Sam Lipschitz <slipsch3@jhu.edu>
 Date:   Thu Mar 26 12:49:46 2020 -0400
