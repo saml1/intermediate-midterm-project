@@ -308,10 +308,10 @@ Image* blur(const Image * im, double sigma){
   double ** gm = createGM(sigma);
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      /*Pixel * temp = filterResponse(gm, sigma, im, i, j);
+      Pixel * temp = filterResponse(gm, sigma, im, i, j);
       pix2d[i][j] = *temp;
-      free(temp);*/
-      pix2d[i][j] = *filterResponse(gm, sigma, im, i, j);
+      free(temp);
+      //pix2d[i][j] = *filterResponse(gm, sigma, im, i, j);
     }
   }
   //setting new->data to 2D array
