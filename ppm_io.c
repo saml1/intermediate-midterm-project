@@ -20,7 +20,9 @@ Image * read_ppm(FILE *fp) {
 
   // check that fp is not NULL
   //assert(fp);
-  
+  if(fp == NULL){
+    return NULL;
+  }
   //check that file is PPM file
   char buf[3];
   for(int i = 0; i < 3; i++){
