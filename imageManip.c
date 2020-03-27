@@ -757,14 +757,14 @@ int doOperation(char *argv[]){
   FILE * inputF = fopen(argv[1], "rb");
   Image * inputI = read_ppm(inputF);
   FILE * outputF = fopen(argv[2], "wb");
-  /*if(outputF == NULL){
+  if(outputF == NULL){
     fclose(inputF);
     free(inputI->data);
     free(inputI);
     fclose(outputF);
     printf("Error: unable to open specified output file for writing or writing output failed.\n");
     return 7;
-    }*/
+    }
   Image * outputI = NULL;
   int skip = 0;
   if(strcmp(argv[3], "exposure") == 0){
