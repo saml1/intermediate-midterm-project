@@ -809,9 +809,9 @@ int doOperation(char *argv[]){
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    //outputI = inputI;
-    outputI = blur(inputI, sigma);
-    //skip = 1;
+    outputI = inputI;
+    //outputI = blur(inputI, sigma);
+    skip = 1;
   }
   /*if(outputF == NULL){                                                                                                                                
     fclose(inputF);
@@ -822,7 +822,7 @@ int doOperation(char *argv[]){
     free(outputI);
     printf("Error: unable to open specified output file for writing or writing output failed.\n");
     return 7;
-  }
+    }*/
   if(write_ppm(outputF, outputI) == -1){
     printf("Error: unable to open specified output file for writing or writing output failed.\n");
     fclose(inputF);
@@ -832,7 +832,8 @@ int doOperation(char *argv[]){
     free(outputI->data);
     free(outputI);
     return 7;
-    }*/
+    }
+  
   if(skip == 0){
     free(outputI->data);
     free(outputI);
