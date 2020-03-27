@@ -757,14 +757,14 @@ int doOperation(char *argv[]){
   FILE * inputF = fopen(argv[1], "rb");
   Image * inputI = read_ppm(inputF);
   FILE * outputF = fopen(argv[2], "wb");
-  if(outputF == NULL){
+  /*if(outputF == NULL){
     fclose(inputF);
     free(inputI->data);
     free(inputI);
-    fclose(outputF);
-    printf("Error: unable to open specified output file for writing or writing output failed.\n");
+    //fclose(outputF);
+    //printf("Error: unable to open specified output file for writing or writing output failed.\n");
     return 7;
-    }
+    }*/
   Image * outputI = NULL;
   int skip = 0;
   if(strcmp(argv[3], "exposure") == 0){
@@ -813,7 +813,7 @@ int doOperation(char *argv[]){
     outputI = blur(inputI, sigma);
     //skip = 1;
   }
-  if(outputF == NULL){                                                                                                                                
+  /*if(outputF == NULL){                                                                                                                                
     fclose(inputF);
     free(inputI->data);
     free(inputI);
@@ -822,7 +822,7 @@ int doOperation(char *argv[]){
     free(outputI);
     printf("Error: unable to open specified output file for writing or writing output failed.\n");
     return 7;
-    }
+  }
   if(write_ppm(outputF, outputI) == -1){
     printf("Error: unable to open specified output file for writing or writing output failed.\n");
     fclose(inputF);
@@ -832,7 +832,7 @@ int doOperation(char *argv[]){
     free(outputI->data);
     free(outputI);
     return 7;
-  }
+    }*/
   if(skip == 0){
     free(outputI->data);
     free(outputI);

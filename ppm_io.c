@@ -230,5 +230,10 @@ int error_report(int argc, char *argv[]){
   fclose(inputF);
   free(inputI->data);
   free(inputI);
+  FILE * outputF = fopen(argv[2], "wb");
+  if(outputF == NULL){
+    return 7;
+  }
+  fclose(outputF);
   return 0;
 }
