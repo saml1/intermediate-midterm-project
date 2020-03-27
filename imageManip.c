@@ -308,9 +308,10 @@ Image* blur(const Image * im, double sigma){
   double ** gm = createGM(sigma);
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      Pixel * temp = filterResponse(gm, sigma, im, i, j);
+      /*Pixel * temp = filterResponse(gm, sigma, im, i, j);
       pix2d[i][j] = *temp;
-      free(temp);
+      free(temp);*/
+      pix2d[i][j] = *filterResponse(gm, sigma, im, i, j);
     }
   }
   //setting new->data to 2D array
@@ -756,6 +757,14 @@ int doOperation(char *argv[]){
   FILE * inputF = fopen(argv[1], "rb");
   Image * inputI = read_ppm(inputF);
   FILE * outputF = fopen(argv[2], "wb");
+  if(outputF == NULL){
+    fclose(inputF);
+    free(inputI->data);
+    free(inputI);
+    fclose(outputF);
+    printf("Error: unable to open specified output file for writing or writing output failed.\n");
+    return 7;
+  }
   Image * outputI = NULL;
   int skip = 0;
   if(strcmp(argv[3], "exposure") == 0){
