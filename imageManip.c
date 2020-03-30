@@ -306,9 +306,12 @@ Image* blur(const Image * im, double sigma){
     pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
   }
   double ** gm = createGM(sigma);
+  double ** filter_temp_r = createGM(sigma);
+  double ** filter_temp_g = createGM(sigma);
+  double ** filter_temp_b = createGM(sigma);
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      filterResponse(&pix2d[i][j], gm, sigma, im, i, j);
+      filterResponse(&pix2d[i][j], gm, sigma, im, i, j, filter_temp_r, filter_temp_g, filter_temp_b);
       /*Pixel * temp = filterResponse(gm, sigma, im, i, j);
       pix2d[i][j] = *temp;
       free(temp);*/
@@ -338,7 +341,13 @@ Image* blur(const Image * im, double sigma){
   }
   for(int i = 0; i < n; i++){
     free(gm[i]);
+    free(filter_temp_r[i]);
+    free(filter_temp_g[i]);
+    free(filter_temp_b[i]);
   }
+  free(filter_temp_r);
+  free(filter_temp_g);
+  free(filter_temp_b);
   free(gm);
   return new;
 }
@@ -372,12 +381,13 @@ double ** createGM(double sigma){
 /* Returns filter response using filter gm for a Pixel in im with
  * given row and col.
  */
-void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col){
+void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col, double ** filter_r, double ** filter_g, double ** filter_b){
   //making a filter for each color channel
   int n = 10 * sigma;
   if((n % 2) == 0){//if n is even                                                                           
     n += 1;
   }
+  /*
   double ** filter_r = malloc(n * sizeof(double));
   double ** filter_g = malloc(n * sizeof(double));
   double ** filter_b = malloc(n * sizeof(double));
@@ -385,7 +395,7 @@ void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im
     filter_r[i] = malloc(n * sizeof(double));
     filter_g[i]	= malloc(n * sizeof(double));
     filter_b[i]	= malloc(n * sizeof(double));
-  }
+    }*/
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       filter_r[i][j] = gm[i][j];
@@ -441,7 +451,7 @@ void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im
   output->b = (unsigned char)(sum_b / sum_gm);
 
   //freeing each color channel filter
-  for(int i = 0; i < n; i++){
+  /*for(int i = 0; i < n; i++){
     free(filter_r[i]);
     free(filter_g[i]);
     free(filter_b[i]);
@@ -449,7 +459,7 @@ void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im
   }
   free(filter_r);
   free(filter_g);
-  free(filter_b);
+  free(filter_b);*/
   //free(filter_temp);
   //return output;
 }
