@@ -36,7 +36,7 @@ double ** createGM(double sigma);
 /* Returns filter response using filter gm for a Pixel in im with 
  * given row and col.
  */
-void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col, double ** filter_r, double ** filter_g, double ** filter_b);
+void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col, double ** filter_r, double ** filter_g, double ** filter_b, double sum_gm);
 
 
 //Takes an input image and returns a zoomed in version of it

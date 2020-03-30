@@ -309,9 +309,21 @@ Image* blur(const Image * im, double sigma){
   double ** filter_temp_r = createGM(sigma);
   double ** filter_temp_g = createGM(sigma);
   double ** filter_temp_b = createGM(sigma);
+
+  int n = 10 * sigma;
+  if((n % 2) == 0){//if n is even
+    n += 1;
+  }
+  double sum_gm = 0;                                                                                               
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      sum_gm += gm[i][j];
+    }
+  }
+  
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      filterResponse(&pix2d[i][j], gm, sigma, im, i, j, filter_temp_r, filter_temp_g, filter_temp_b);
+      filterResponse(&pix2d[i][j], gm, sigma, im, i, j, filter_temp_r, filter_temp_g, filter_temp_b, sum_gm);
       /*Pixel * temp = filterResponse(gm, sigma, im, i, j);
       pix2d[i][j] = *temp;
       free(temp);*/
@@ -334,11 +346,7 @@ Image* blur(const Image * im, double sigma){
     free(pix2d[i]);
   }
   free(pix2d);
-
-  int n = 10 * sigma;
-  if((n % 2) == 0){
-    n += 1;
-  }
+  
   for(int i = 0; i < n; i++){
     free(gm[i]);
     free(filter_temp_r[i]);
@@ -381,7 +389,7 @@ double ** createGM(double sigma){
 /* Returns filter response using filter gm for a Pixel in im with
  * given row and col.
  */
-void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col, double ** filter_r, double ** filter_g, double ** filter_b){
+void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col, double ** filter_r, double ** filter_g, double ** filter_b, double sum_gm){
   //making a filter for each color channel
   int n = 10 * sigma;
   if((n % 2) == 0){//if n is even                                                                           
@@ -405,12 +413,12 @@ void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im
   }
   //double ** filter_temp = gm;
   //calculating initial sum of values in Gaussian matrix
-  double sum_gm = 0;
+  /*double sum_gm = 0;
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
       sum_gm += gm[i][j];
     }
-  }
+    }*/
   //Pixel *output = malloc(sizeof(Pixel));
   //setting pixel at given row/col at center of matrix and multiplying each matrix element by
   //pixel value beneath it
