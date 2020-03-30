@@ -308,13 +308,20 @@ Image* blur(const Image * im, double sigma){
   double ** gm = createGM(sigma);
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      Pixel * temp = filterResponse(gm, sigma, im, i, j);
+      filterResponse(&pix2d[i][j], gm, sigma, im, i, j);
+      /*Pixel * temp = filterResponse(gm, sigma, im, i, j);
       pix2d[i][j] = *temp;
-      free(temp);
+      free(temp);*/
       //pix2d[i][j] = *filterResponse(gm, sigma, im, i, j);
     }
   }
   //setting new->data to 2D array
+
+  /*for(int i = 0; i < im->rows; i++){
+    pix2d[i] = malloc(im->cols*sizeof(pix2d[0]));
+    for(
+    }*/
+  
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
       new->data[(i * im->cols) + j] = pix2d[i][j];
@@ -365,7 +372,7 @@ double ** createGM(double sigma){
 /* Returns filter response using filter gm for a Pixel in im with
  * given row and col.
  */
-Pixel* filterResponse(double ** gm, double sigma, const Image * im, int row, int col){
+void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col){
   //making a filter for each color channel
   int n = 10 * sigma;
   if((n % 2) == 0){//if n is even                                                                           
@@ -394,7 +401,7 @@ Pixel* filterResponse(double ** gm, double sigma, const Image * im, int row, int
       sum_gm += gm[i][j];
     }
   }
-  Pixel *output = malloc(sizeof(Pixel));
+  //Pixel *output = malloc(sizeof(Pixel));
   //setting pixel at given row/col at center of matrix and multiplying each matrix element by
   //pixel value beneath it
   for(int i = - n / 2; i < n / 2 + 1; i++){
@@ -416,12 +423,7 @@ Pixel* filterResponse(double ** gm, double sigma, const Image * im, int row, int
       }
     }
   }
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      //printf("%f ", filter_r[i][j]);
-    }
-    //printf("\n");
-  }
+  
   //calculating sum of weighted Pixel values for each color channel
   double sum_r = 0;
   double sum_g = 0;
@@ -449,7 +451,7 @@ Pixel* filterResponse(double ** gm, double sigma, const Image * im, int row, int
   free(filter_g);
   free(filter_b);
   //free(filter_temp);
-  return output;
+  //return output;
 }
 
 Image * zoom_in(const Image * input1) {
