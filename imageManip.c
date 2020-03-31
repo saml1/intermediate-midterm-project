@@ -331,7 +331,7 @@ Image* newblur(const Image * im, double sigma) {
     S += 1;
   }
   int R = (S-1) / 2; //Define a center point
-  int O = sigma; //Define sigma as O for simplification of formula
+  double O = sigma; //Define sigma as O for simplification of formula
   double pi = 3.141592653589793; //Pi with 15 digits of accuracy
 
   double ** gm = malloc(S * sizeof(double));
