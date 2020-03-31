@@ -294,6 +294,120 @@ Image * pointilism(const Image * im){
 /* Returns blurred version of given Image.
  * When sigma is larger, the output will have a stronger blurred effect.
  */
+Image* newblur(const Image * im, double sigma) {
+  //Create a new output Image
+  Image * new = malloc(sizeof(Image));
+  new->rows = im->rows;
+  new->cols = im->cols;
+  new->data = malloc(sizeof(Pixel) * im->rows * im->cols);
+  //Create a 2D array of Pixels to edit for output
+  Pixel ** input;
+  input = malloc(sizeof(*input) * im->rows);
+  for (int i = 0; i < im->rows; i++) {
+    input[i] = malloc(im->cols * sizeof(input[0]));
+  }
+  //Write the original image to the output array before editing
+  for(int i = 0; i < im->rows; i++) {
+    for(int j = 0; j < im->cols; j++) {
+      input[i][j] = im->data[(i*im->cols) + j];
+    }
+  }
+  //Create a 2D matrix to edit
+  Pixel ** output;
+  output = malloc(sizeof(*output) * im->rows);
+  for(int i = 0; i < im->rows; i++) {
+    output[i] = malloc(sizeof(output[0]) * im->cols);
+  }
+  for(int i = 0; i < im->rows; i++) {
+    for(int j = 0; j < im->cols; j++) {
+      output[i][j] = im->data[(i*im->cols) + j];
+    }
+  }
+  
+
+  //Create Gaussian Matrix
+  int S = sigma * 10; //Create a variable for size of matrix
+  if(S % 2 ==0) {
+    S += 1;
+  }
+  int R = (S-1) / 2; //Define a center point
+  int O = sigma; //Define sigma as O for simplification of formula
+  double pi = 3.141592653589793; //Pi with 15 digits of accuracy
+
+  double ** gm = malloc(S * sizeof(double));
+  for(int i = 0; i < S; i++) {
+    gm[i] = malloc(S * sizeof(double));
+  }
+  double sumGM = 0.0;
+  for(int i = 0; i < S; i++) {
+    for(int j = 0; j< S; j++) {
+      double dx = abs(S/2 - j);
+      double dy = abs(S/2 - i);
+      gm[i][j] = (1.0 / (2.0 * pi * sq(O))) * exp(-(sq(dx) + sq(dy)) / (2* sq(O)));
+      sumGM += gm[i][j];
+    }
+  }
+  double sumR = 0;
+  double sumG = 0;
+  double sumB = 0;
+  //Run gaussian matrix over output array
+  for(int u = 0; u < im->rows; u++) {
+    for(int v = 0; v < im->cols; v++) {
+      for(int i = 0; i < S; i++) {
+	for(int j = 0; j < S; j++) {
+	  if(((u + i - R) >= 0) && ((u + i - R) < im->rows) && ((v + j - R) >= 0) && ((v + j - R) < im->cols)) {
+	    sumR += gm[i][j] * input[u + i - R][v + j - R].r;
+	    sumG += gm[i][j] * input[u + i - R][v + j - R].g;
+	    sumB += gm[i][j] * input[u + i - R][v + j - R].b;
+	  }
+	}
+      }
+      output[u][v].r = (unsigned char)(sumR / sumGM);
+      output[u][v].g = (unsigned char)(sumG / sumGM);
+      output[u][v].b = (unsigned char)(sumB / sumGM);
+      sumR = 0;
+      sumG = 0;
+      sumB = 0;
+    }
+  }
+
+
+
+
+
+  
+
+  //Write the edited output array into the new image to return
+  for(int i = 0; i < im->rows; i++) {
+    for(int j = 0; j < im->cols; j++) {
+      new->data[(i*im->cols) + j] = output[i][j];
+    }
+  }
+  //Free Memory
+  for(int i = 0;i < im->rows; i++) {
+    free(output[i]);
+    free(input[i]);
+  }
+  for(int i = 0; i < S; i++) {
+    free(gm[i]);
+  }
+  free(gm);
+  free(input);
+  free(output);
+  return new;
+
+  
+}
+
+
+
+
+
+
+
+
+
+
 Image* blur(const Image * im, double sigma){
   Image * new = malloc(sizeof(Image));
   new->rows = im->rows;
@@ -830,7 +944,7 @@ int doOperation(char *argv[]){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
     //outputI = inputI;
-    outputI = blur(inputI, sigma);
+    outputI = newblur(inputI, sigma);
     //skip = 1;
   }
   /*if(outputF == NULL){                                                                                                                                
