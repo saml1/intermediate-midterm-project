@@ -327,7 +327,7 @@ Image* newblur(const Image * im, double sigma) {
 
   //Create Gaussian Matrix
   int S = sigma * 10; //Create a variable for size of matrix
-  if(S % 2 ==0) {
+  if(S % 2 == 0) {
     S += 1;
   }
   int R = (S-1) / 2; //Define a center point
@@ -344,7 +344,7 @@ Image* newblur(const Image * im, double sigma) {
       double dx = abs(S/2 - j);
       double dy = abs(S/2 - i);
       gm[i][j] = (1.0 / (2.0 * pi * sq(O))) * exp(-(sq(dx) + sq(dy)) / (2* sq(O)));
-      sumGM += gm[i][j];
+      //sumGM += gm[i][j];
     }
   }
   double sumR = 0;
@@ -359,12 +359,14 @@ Image* newblur(const Image * im, double sigma) {
 	    sumR += gm[i][j] * input[u + i - R][v + j - R].r;
 	    sumG += gm[i][j] * input[u + i - R][v + j - R].g;
 	    sumB += gm[i][j] * input[u + i - R][v + j - R].b;
+	    sumGM += gm[i][j];
 	  }
 	}
       }
       output[u][v].r = (unsigned char)(sumR / sumGM);
       output[u][v].g = (unsigned char)(sumG / sumGM);
       output[u][v].b = (unsigned char)(sumB / sumGM);
+      sumGM = 0;
       sumR = 0;
       sumG = 0;
       sumB = 0;
