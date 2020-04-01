@@ -753,5 +753,7 @@ int doOperation(char *argv[]){
   fclose(outputF);
   free(inputI->data);
   free(inputI);
+  free(outputI->data);
+  free(outputI);
   return 0;
 }
