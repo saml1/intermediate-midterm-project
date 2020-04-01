@@ -26,7 +26,6 @@ Image * pointilism(const Image * im);
  * When sigma is larger, the output will have a stronger blurred effect.
  */
 Image* blur(const Image * im, double sigma);
-Image* newblur(const Image * im, double sigma);
 
 /* Returns the square of the given double. */
 double sq(double p);

@@ -1,3 +1,99 @@
+commit d3759aa379745147089b370c3ac3085c01b1e557
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Tue Mar 31 22:11:24 2020 -0400
+
+    Corrected issue with gaussian matrix
+
+commit 44b743e68e834628fecf1c50e84818e01d54f7e8
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Tue Mar 31 18:53:52 2020 -0400
+
+    Sigma somehow ended up as an int oops. Resubmitting to gradescope to verify difference in images is fixed
+
+commit f0dd0b41f6b48b84b8acab39a8c0e702c534ea23
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Tue Mar 31 18:47:54 2020 -0400
+
+    Wrote a seperate new method for blur that is more efficient in time, gradescope says output is incorrect. Still need to troubleshoot
+
+commit e08d627722bd0b0131883b9182647caad9c6cbe2
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Mon Mar 30 13:31:24 2020 -0400
+
+    made blur callculate sum of gm so it doesn't have to be calculated for each pixel
+
+commit f949a68ed084ae9c360e299a3ca2284581ab83f0
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Mon Mar 30 12:24:39 2020 -0400
+
+    changed filterResponse to take in 3 double ** as filters for each color, when running blur for building.ppm sigma = .5, # of allocs went from 8.6 million to 638- hopefully good for gradescope
+
+commit b378b7da0b652531137ac83bcebc1c8884ca6492
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Mon Mar 30 11:27:50 2020 -0400
+
+    made filterResponse void so there would be one less malloc per pixel in blur
+
+commit ac23b2af3f38571f7f32495b63468397dce2ba20
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Fri Mar 27 13:52:07 2020 -0400
+
+    Uncommented blur function and prepared for final gradescope submission
+
+commit e66bc32c0c0eee00e9d2c5b22cb612e491678303
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 13:37:55 2020 -0400
+
+    now errors work but accidentally commented out line that actually writes file- fixed that and commented out blur so tests runn quicker
+
+commit 2e1e84079b7591028d28daf1c7b041650178ce86
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 13:10:38 2020 -0400
+
+    made only doOperation check for error 7 and not do fclose if the file is null
+
+commit 3d9f3d07d155ab75d0c2df4d6b6040349cea5ab6
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 12:33:42 2020 -0400
+
+    one more try for 7
+
+commit ba37c4214db7ea6e782e248e74ebfae5c2bd238e
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 12:05:48 2020 -0400
+
+    fixed valgrind error (and hopefully also error 7)
+
+commit 45812fe8a8a75009be56067476b722a07672ce19
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 11:59:41 2020 -0400
+
+    moved error 7 possible fix to bottom of doOperation
+
+commit dba37a7c78e7604c1e1afaa862756fb0d490830c
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 11:39:58 2020 -0400
+
+    another attempt to fix error 7- now returns error if FILE* of output is null
+
+commit 0fb607b50fef287d4b4cb6f0e02cbfc84012e622
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Fri Mar 27 11:29:53 2020 -0400
+
+    again trying to fix error 7
+
+commit 51fb76a6762be705ea9529abdc601caffe4cbdb4
+Author: Sam Lipschitz <slipsch3@jhu.edu>
+Date:   Thu Mar 26 18:00:32 2020 -0400
+
+    hopefully fixed error 7 bug
+
+commit 0d8f6c7b4431496c1f180773e1b13aac1e2f8ce1
+Author: Brayden Archer <barcher9@jh.edu>
+Date:   Thu Mar 26 17:50:31 2020 -0400
+
+    Updated git log
+
 commit 2f9de236e7ab8a496103465aa294d3bfc136f8b6
 Author: Brayden Archer <barcher9@jh.edu>
 Date:   Thu Mar 26 17:47:59 2020 -0400

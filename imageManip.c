@@ -14,7 +14,7 @@
 
 /* Takes Image * fp and returns a new Image * with modified exposure ev. */
 Image * exposure(const Image * orig, float ev){
-  Image * new = malloc(sizeof(Image));;
+  Image * new = malloc(sizeof(Image));
   Pixel *pixels = malloc(sizeof(Pixel)*orig->rows*orig->cols);
   new->data = pixels;
   new->rows = orig->rows;
@@ -237,7 +237,6 @@ Image * pointilism(const Image * im){
   pix2d = malloc(im->rows * sizeof(*pix2d));
   for(int i = 0; i < im->rows; i++){
     pix2d[i] = malloc(im->cols * sizeof(Pixel));
-    //pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
   }
   //randomly picking 3% of pixels and applying pointilism effect
   int curx = 0;
@@ -245,13 +244,11 @@ Image * pointilism(const Image * im){
   int curr = 0;
   for(int i = 0; i < im->rows; i++){
     for(int j = 0; j < im->cols; j++){
-      //pix2d[i][j]= im->data[(i * im->cols) + j];
       pix2d[i][j].r= im->data[(i * im->cols) + j].r;
       pix2d[i][j].g= im->data[(i * im->cols) + j].g;
       pix2d[i][j].b= im->data[(i * im->cols) + j].b;
     }
   }
-  //printf("numpix: %d\n", numPix);
   for(int p = 0; p < numPix * 0.03; p++){
     int count = 0;
     curx = rand() % im->cols;
@@ -263,7 +260,6 @@ Image * pointilism(const Image * im){
 	//if pixel exists
 	if((i >= 0) && (i < im->rows) && (j >= 0) && (j < im->cols)){
 	  //if pixel is within radius (using distance formula) set its color to center of circle
-
 	  if(pow((j - curx), 2) + pow((i - cury),2) <= pow(curr, 2)){
 	    //if(sqrt(pow((i-cury), 2) + pow((j-curx),2)) < (double)curr){
 	    pix2d[i][j].r = pix2d[cury][curx].r;
@@ -274,7 +270,6 @@ Image * pointilism(const Image * im){
 	}
       }
     }
-    //printf("curx: %d, cury: %d, curr: %d, count: %d\n", curx, cury, curr, count);
 
   }
   //setting im->data to pix2d
@@ -294,7 +289,7 @@ Image * pointilism(const Image * im){
 /* Returns blurred version of given Image.
  * When sigma is larger, the output will have a stronger blurred effect.
  */
-Image* newblur(const Image * im, double sigma) {
+Image* blur(const Image * im, double sigma) {
   //Create a new output Image
   Image * new = malloc(sizeof(Image));
   new->rows = im->rows;
@@ -324,7 +319,6 @@ Image* newblur(const Image * im, double sigma) {
     }
   }
   
-
   //Create Gaussian Matrix
   int S = sigma * 10; //Create a variable for size of matrix
   if(S % 2 == 0) {
@@ -344,7 +338,6 @@ Image* newblur(const Image * im, double sigma) {
       double dx = abs(S/2 - j);
       double dy = abs(S/2 - i);
       gm[i][j] = (1.0 / (2.0 * pi * sq(O))) * exp(-(sq(dx) + sq(dy)) / (2* sq(O)));
-      //sumGM += gm[i][j];
     }
   }
   double sumR = 0;
@@ -373,12 +366,6 @@ Image* newblur(const Image * im, double sigma) {
     }
   }
 
-
-
-
-
-  
-
   //Write the edited output array into the new image to return
   for(int i = 0; i < im->rows; i++) {
     for(int j = 0; j < im->cols; j++) {
@@ -397,195 +384,7 @@ Image* newblur(const Image * im, double sigma) {
   free(input);
   free(output);
   return new;
-
   
-}
-
-
-
-
-
-
-
-
-
-
-Image* blur(const Image * im, double sigma){
-  Image * new = malloc(sizeof(Image));
-  new->rows = im->rows;
-  new->cols = im->cols;
-  new->data = malloc(sizeof(Pixel) * new->rows * new->cols); 
-  //creating 2D pixel array
-  Pixel ** pix2d;
-  pix2d = malloc(sizeof(*pix2d) * im->rows);
-  for(int i = 0; i < im->rows; i++){                                                               
-    pix2d[i] = malloc(im->cols * sizeof(pix2d[0]));
-  }
-  double ** gm = createGM(sigma);
-  double ** filter_temp_r = createGM(sigma);
-  double ** filter_temp_g = createGM(sigma);
-  double ** filter_temp_b = createGM(sigma);
-
-  int n = 10 * sigma;
-  if((n % 2) == 0){//if n is even
-    n += 1;
-  }
-  double sum_gm = 0;                                                                                               
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      sum_gm += gm[i][j];
-    }
-  }
-  
-  for(int i = 0; i < im->rows; i++){
-    for(int j = 0; j < im->cols; j++){
-      filterResponse(&pix2d[i][j], gm, sigma, im, i, j, filter_temp_r, filter_temp_g, filter_temp_b, sum_gm);
-      /*Pixel * temp = filterResponse(gm, sigma, im, i, j);
-      pix2d[i][j] = *temp;
-      free(temp);*/
-      //pix2d[i][j] = *filterResponse(gm, sigma, im, i, j);
-    }
-  }
-  //setting new->data to 2D array
-
-  /*for(int i = 0; i < im->rows; i++){
-    pix2d[i] = malloc(im->cols*sizeof(pix2d[0]));
-    for(
-    }*/
-  
-  for(int i = 0; i < im->rows; i++){
-    for(int j = 0; j < im->cols; j++){
-      new->data[(i * im->cols) + j] = pix2d[i][j];
-    }
-  }
-  for(int i = 0; i < im->rows; i++){
-    free(pix2d[i]);
-  }
-  free(pix2d);
-  
-  for(int i = 0; i < n; i++){
-    free(gm[i]);
-    free(filter_temp_r[i]);
-    free(filter_temp_g[i]);
-    free(filter_temp_b[i]);
-  }
-  free(filter_temp_r);
-  free(filter_temp_g);
-  free(filter_temp_b);
-  free(gm);
-  return new;
-}
-
-/* Returns the square of the given double. */
-double sq(double p){
-  return p * p;
-}
-
-/* Returns a 2D double Gaussian matrix with  variance sigma. */
-double ** createGM(double sigma){
-  int n = 10 * sigma;
-  if((n % 2) == 0){//if n is even
-    n += 1;
-  }
-  //don't forget to free everything eventually when this method is called
-  double ** gm = malloc(n * sizeof(double));
-  for(int i = 0; i < n; i++){
-    gm[i] = malloc(n * sizeof(double));
-  }
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      double dy = abs(n / 2 - i);
-      double dx = abs(n / 2 - j);
-      gm[i][j] = (1.0 / (2.0 * PI * sq(sigma))) * exp( -(sq(dx) + sq(dy)) / (2 * sq(sigma)));
-    }
-  }
-  return gm;
-}
-
-/* Returns filter response using filter gm for a Pixel in im with
- * given row and col.
- */
-void filterResponse(Pixel * output, double ** gm, double sigma, const Image * im, int row, int col, double ** filter_r, double ** filter_g, double ** filter_b, double sum_gm){
-  //making a filter for each color channel
-  int n = 10 * sigma;
-  if((n % 2) == 0){//if n is even                                                                           
-    n += 1;
-  }
-  /*
-  double ** filter_r = malloc(n * sizeof(double));
-  double ** filter_g = malloc(n * sizeof(double));
-  double ** filter_b = malloc(n * sizeof(double));
-  for(int i = 0; i < n; i++){
-    filter_r[i] = malloc(n * sizeof(double));
-    filter_g[i]	= malloc(n * sizeof(double));
-    filter_b[i]	= malloc(n * sizeof(double));
-    }*/
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      filter_r[i][j] = gm[i][j];
-      filter_g[i][j] = gm[i][j];
-      filter_b[i][j] = gm[i][j];
-    }
-  }
-  //double ** filter_temp = gm;
-  //calculating initial sum of values in Gaussian matrix
-  /*double sum_gm = 0;
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      sum_gm += gm[i][j];
-    }
-    }*/
-  //Pixel *output = malloc(sizeof(Pixel));
-  //setting pixel at given row/col at center of matrix and multiplying each matrix element by
-  //pixel value beneath it
-  for(int i = - n / 2; i < n / 2 + 1; i++){
-    for(int j = - n / 2; j < n/2 + 1; j++){
-      //if a Pixel exists below
-      //if(!((row < n/2) || (col < n/2) || (row >= im->rows -(n/2)) || (col >= im->cols - (n/2)))){
-      if((i + row >= 0) && (j + col >= 0) && (i+ row < im->rows ) && (j + col < im->cols)){
-	//printf("no skip, i=%d, j= %d\n", i, j);
-	filter_r[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].r;
-	//printf(" (pass)\n");
-	filter_g[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].g;
-	filter_b[i + (n / 2)][j + (n / 2)] *= im->data[(row + i ) * im->cols + col + j].b;
-      }else{//if Pixel doesn't exist below, set to 0
-	//printf("skip, i=%d, j= %d\n", i, j);
-	filter_r[i + (n / 2)][j + (n / 2)] = 0;
-	filter_g[i + (n / 2)][j + (n / 2)] = 0;
-	filter_b[i + (n / 2)][j + (n / 2)] = 0;
-	sum_gm -= gm[i + (n / 2)][j + (n / 2)];
-      }
-    }
-  }
-  
-  //calculating sum of weighted Pixel values for each color channel
-  double sum_r = 0;
-  double sum_g = 0;
-  double sum_b = 0;
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      sum_r += filter_r[i][j];
-      sum_g += filter_g[i][j];
-      sum_b += filter_b[i][j];
-    }
-  }
-  //setting output Pixel's color channels to normalized sum of values in filter matrix
-  output->r = (unsigned char)(sum_r / sum_gm);
-  output->g = (unsigned char)(sum_g / sum_gm);
-  output->b = (unsigned char)(sum_b / sum_gm);
-
-  //freeing each color channel filter
-  /*for(int i = 0; i < n; i++){
-    free(filter_r[i]);
-    free(filter_g[i]);
-    free(filter_b[i]);
-    //free(filter_temp[i]);
-  }
-  free(filter_r);
-  free(filter_g);
-  free(filter_b);*/
-  //free(filter_temp);
-  //return output;
 }
 
 Image * zoom_in(const Image * input1) {
@@ -612,7 +411,6 @@ Image * zoom_in(const Image * input1) {
       input[i][j].r = input1->data[(i*(icols)) + j].r;
       input[i][j].g = input1->data[(i*(icols)) + j].g;
       input[i][j].b = input1->data[(i*(icols)) + j].b;
-      // input[i][j] = input1->data[(i*(icols)) + j];
     }
   }
 
@@ -644,7 +442,6 @@ Image * zoom_in(const Image * input1) {
   for (int i = 0; i < orow; i += 2) {
     for (int j = 0; j < ocol; j += 2) {
       //Create a 2 x 2 box of pixels that are the same in the new output array then skip every other row and column since output array is double that of the input array
-      //printf("row %d, col %d\n", row, col);
       output[i][j].r = input[row][col].r;
       output[i][j].g = input[row][col].g;
       output[i][j].b = input[row][col].b;
@@ -790,6 +587,10 @@ Image * zoom_out(const Image * input1) {
   return new;
 }
 
+/* Returns the square of the given double. */
+double sq(double p){
+  return p * p;
+}
 
 Image * swirl(const Image * input1, const int centerX, const int centerY, const int scale) {
   //Declare some variables with easy names to remember
@@ -893,16 +694,7 @@ int doOperation(char *argv[]){
   FILE * inputF = fopen(argv[1], "rb");
   Image * inputI = read_ppm(inputF);
   FILE * outputF = fopen(argv[2], "wb");
-  /*if(outputF == NULL){
-    fclose(inputF);
-    free(inputI->data);
-    free(inputI);
-    //fclose(outputF);
-    //printf("Error: unable to open specified output file for writing or writing output failed.\n");
-    return 7;
-    }*/
   Image * outputI = NULL;
-  int skip = 0;
   if(strcmp(argv[3], "exposure") == 0){
     double ev;
     sscanf(argv[4], "%lf", &ev);
@@ -945,20 +737,8 @@ int doOperation(char *argv[]){
   if(strcmp(argv[3], "blur") == 0){
     double sigma;
     sscanf(argv[4], "%lf", &sigma);
-    //outputI = inputI;
-    outputI = newblur(inputI, sigma);
-    //skip = 1;
+    outputI = blur(inputI, sigma);
   }
-  /*if(outputF == NULL){                                                                                                                                
-    fclose(inputF);
-    free(inputI->data);
-    free(inputI);
-    fclose(outputF);
-    free(outputI->data);
-    free(outputI);
-    printf("Error: unable to open specified output file for writing or writing output failed.\n");
-    return 7;
-    }*/
   if(write_ppm(outputF, outputI) == -1){
     printf("Error: unable to open specified output file for writing or writing output failed.\n");
     fclose(inputF);
@@ -969,11 +749,6 @@ int doOperation(char *argv[]){
     free(outputI);
     return 7;
     }
-  
-  if(skip == 0){
-    free(outputI->data);
-    free(outputI);
-  }
   fclose(inputF);
   fclose(outputF);
   free(inputI->data);
